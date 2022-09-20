@@ -1,25 +1,23 @@
 {
     "name": "sakai-react",
     "version": "7.0.3-SNAPSHOT",
-    "homepage": "https://github.com/JoseeCarlos/project-solnaciente.git",
+    "homepage": ".",
     "private": false,
     "repository": {
         "type": "git",
-        "url": "https://github.com/JoseeCarlos/project-solnaciente.git"
+        "url": "https://github.com/primefaces/sakai-react.git"
     },
     "license": "MIT",
     "dependencies": {
         "@fullcalendar/core": "^5.7.2",
         "@fullcalendar/daygrid": "^5.7.2",
         "@fullcalendar/interaction": "^5.7.2",
-        "@fullcalendar/react": "^5.7.0",
         "@fullcalendar/timegrid": "^5.7.2",
-        "axios": "^0.19.0",
+        "@fullcalendar/react": "^5.7.0",
         "chart.js": "3.3.2",
-        "classnames": "^2.2.6",
+        "primereact": "7.2.0",
         "primeflex": "3.1.0",
         "primeicons": "^5.0.0",
-        "primereact": "7.2.0",
         "prismjs": "1.9.0",
         "react": "^17.0.1",
         "react-app-polyfill": "^1.0.6",
@@ -27,15 +25,15 @@
         "react-router-dom": "^5.2.0",
         "react-scripts": "3.4.1",
         "react-transition-group": "^4.4.1",
-        "sass": "^1.32.8"
+        "sass": "^1.32.8",
+        "axios": "^0.19.0",
+        "classnames": "^2.2.6"
     },
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject",
-        "predeploy": "npm run build",
-        "deploy": "gh-pages -d build"
+        "eject": "react-scripts eject"
     },
     "eslintConfig": {
         "extends": [
@@ -47,8 +45,5 @@
         "not dead",
         "not ie <= 11",
         "not op_mini all"
-    ],
-    "devDependencies": {
-        "gh-pages": "^4.0.0"
-    }
+    ]
 }
