@@ -1,0 +1,31 @@
+{
+  "files": {
+    "main.css": "/JoseeCarlos/project-solnaciente.git/static/css/main.b705a980.chunk.css",
+    "main.js": "/JoseeCarlos/project-solnaciente.git/static/js/main.e16ad5de.chunk.js",
+    "main.js.map": "/JoseeCarlos/project-solnaciente.git/static/js/main.e16ad5de.chunk.js.map",
+    "runtime-main.js": "/JoseeCarlos/project-solnaciente.git/static/js/runtime-main.53d8c517.js",
+    "runtime-main.js.map": "/JoseeCarlos/project-solnaciente.git/static/js/runtime-main.53d8c517.js.map",
+    "static/css/2.ed5b23ac.chunk.css": "/JoseeCarlos/project-solnaciente.git/static/css/2.ed5b23ac.chunk.css",
+    "static/js/2.259f709d.chunk.js": "/JoseeCarlos/project-solnaciente.git/static/js/2.259f709d.chunk.js",
+    "static/js/2.259f709d.chunk.js.map": "/JoseeCarlos/project-solnaciente.git/static/js/2.259f709d.chunk.js.map",
+    "static/js/3.45710c49.chunk.js": "/JoseeCarlos/project-solnaciente.git/static/js/3.45710c49.chunk.js",
+    "static/js/3.45710c49.chunk.js.map": "/JoseeCarlos/project-solnaciente.git/static/js/3.45710c49.chunk.js.map",
+    "index.html": "/JoseeCarlos/project-solnaciente.git/index.html",
+    "precache-manifest.c423931a1a7d66befc9be80606cc5455.js": "/JoseeCarlos/project-solnaciente.git/precache-manifest.c423931a1a7d66befc9be80606cc5455.js",
+    "service-worker.js": "/JoseeCarlos/project-solnaciente.git/service-worker.js",
+    "static/css/2.ed5b23ac.chunk.css.map": "/JoseeCarlos/project-solnaciente.git/static/css/2.ed5b23ac.chunk.css.map",
+    "static/css/main.b705a980.chunk.css.map": "/JoseeCarlos/project-solnaciente.git/static/css/main.b705a980.chunk.css.map",
+    "static/js/2.259f709d.chunk.js.LICENSE.txt": "/JoseeCarlos/project-solnaciente.git/static/js/2.259f709d.chunk.js.LICENSE.txt",
+    "static/js/3.45710c49.chunk.js.LICENSE.txt": "/JoseeCarlos/project-solnaciente.git/static/js/3.45710c49.chunk.js.LICENSE.txt",
+    "static/js/main.e16ad5de.chunk.js.LICENSE.txt": "/JoseeCarlos/project-solnaciente.git/static/js/main.e16ad5de.chunk.js.LICENSE.txt",
+    "static/media/flags.css": "/JoseeCarlos/project-solnaciente.git/static/media/flags_responsive.73e6b012.png",
+    "static/media/primeicons.css": "/JoseeCarlos/project-solnaciente.git/static/media/primeicons.e01fd413.eot"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.53d8c517.js",
+    "static/css/2.ed5b23ac.chunk.css",
+    "static/js/2.259f709d.chunk.js",
+    "static/css/main.b705a980.chunk.css",
+    "static/js/main.e16ad5de.chunk.js"
+  ]
+}

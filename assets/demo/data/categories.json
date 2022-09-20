@@ -1,0 +1,15 @@
+{
+    "data": [
+        {"id": 1, "name": "Industria", "is_active": "on" },
+        {"id": 2, "name": "Comercio", "is_active": "on" },
+        {"id": 3, "name": "Servicios", "is_active": "on" },
+        {"id": 4, "name": "Agricultura", "is_active": "on" },
+        {"id": 5, "name": "Gobierno", "is_active": "on" },
+        {"id": 6, "name": "Educación", "is_active": "on" },
+        {"id": 7, "name": "Salud", "is_active": "on" },
+        {"id": 8, "name": "Finanzas", "is_active": "on" },
+        {"id": 9, "name": "Turismo", "is_active": "on" },
+        {"id": 10, "name": "Otro", "is_active": "on" }
+       
+    ]
+}
