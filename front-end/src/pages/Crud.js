@@ -31,6 +31,7 @@ const Crud = () => {
         updated_at: null,
         idprovider: null,
         iduser: null,
+        id_brand: null,
 
     };
 
@@ -110,22 +111,17 @@ const Crud = () => {
         if (product.name.trim()) {
             let _products = [...products];
             let _product = { ...product };
-            if (product.id) {
-                const index = findIndexById(product.id);
+            if (product.idProduct) {
+                const index = findIndexById(product.idProduct);
 
                 _products[index] = _product;
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
             }
             else {
-                _product.id = createId();
-                _product.image = 'product-placeholder.svg';
+                _product.idProduct = createId();
                 _products.push(_product);
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
             }
-
-            setProducts(_products);
-            setProductDialog(false);
-            setProduct(emptyProduct);
         }
     }
 
@@ -187,6 +183,19 @@ const Crud = () => {
     const onCategoryChange = (e) => {
         let _product = { ...product };
         _product['category_id'] = e.value;
+        console.log(_product);
+        setProduct(_product);
+    }
+
+    const onProviderChange = (e) => {
+        let _product = { ...product };
+        _product['idprovider'] = e.value;
+        console.log(_product);
+        setProduct(_product);
+    }
+    const onBrandChange = (e) => {
+        let _product = { ...product };
+        _product['idbrand'] = e.value;
         console.log(_product);
         setProduct(_product);
     }
@@ -417,31 +426,31 @@ const Crud = () => {
                             {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
                         </div>
                         <div className="field">
-                            <label htmlFor="price">image</label>
-                            <FileUpload name="demo" url="./upload" mode="basic" />
+                            <label htmlFor="price">image{product.image}</label>
+                            <FileUpload name="demo" value={product.image} url="./upload" mode="basic" />
                         </div>
                         <div className="field">
                             <label htmlFor="barcode">Codigo de Barra</label>
-                            <InputText id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                            <InputText id="description" value={product.barcode} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
                         </div>
                         <div className="formgrid grid">
                             <div className="field col">
                                 <label htmlFor="price">Precio de compra</label>
-                                <InputNumber id="price" value={product.price} onValueChange={(e) => onInputNumberChange(e, 'price')} mode="currency" currency="USD" locale="en-US" />
+                                <InputNumber id="price" value={product.price_in} onValueChange={(e) => onInputNumberChange(e, 'price')} mode="currency" currency="USD" locale="en-US" />
                             </div>
                             <div className="field col">
                                 <label htmlFor="quantity">Precio de venta</label>
-                                <InputNumber id="quantity" value={product.quantity} onValueChange={(e) => onInputNumberChange(e, 'quantity')} integeronly />
+                                <InputNumber id="quantity" value={product.price_out} onValueChange={(e) => onInputNumberChange(e, 'quantity')} integeronly />
                             </div>
                         </div>
                         <div className="formgrid grid">
                             <div className="field col">
                                 <label htmlFor="barcode">Presentacion</label>
-                                <InputText id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                                <InputText id="description" value={product.presentation} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
                             </div>
                             <div className="field col">
                             <label htmlFor="barcode">Unidad de medida</label>
-                            <InputText id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                            <InputText id="description" value={product.unit} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
                             </div>
                         </div>
                         {/* <div className="field">
@@ -454,7 +463,7 @@ const Crud = () => {
                         </div> */}
                         <div className="field">
                             <label htmlFor="barcode">Stock</label>
-                            <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                            <InputTextarea id="description" value={product.stock} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
                         </div>
                        
 
@@ -478,22 +487,23 @@ const Crud = () => {
                             { providers.map((item)=>(
                                 
                                 <div className="field-radiobutton col-6">
-                                    <RadioButton inputId={item.idprovider} name="category" value={item.idprovider} onChange={onCategoryChange} checked={product.idprovider === item.idprovider} />
-                                    <label htmlFor={item.id}>{item.name}</label>
+                                    <RadioButton inputId={item.idprovider} name="category" value={item.idprovider} onChange={onProviderChange} checked={product.idprovider === item.idprovider} />
+                                    <label htmlFor={item.idprovider}>{item.name}</label>
                                 </div>
                             )) }
                             </div>
                         </div>
+
                         <div className="field">
                             <label className="mb-3">Marca</label>
                             <div className="formgrid grid">
                            
-                            { categories.map((item)=>(
+                            { brands.map((item)=>(
                                 
                                 <div className="field-radiobutton col-6">
-                                    <RadioButton inputId={item.id} name="category" value={item.id} onChange={onCategoryChange} checked={product.category_id === item.id} />
-                                    <label htmlFor={item.id}>{item.name}</label>
-                                </div>
+                                <RadioButton inputId={item.idbrand} name="category" value={item.idbrand} onChange={onBrandChange} checked={product.id_brand === item.idbrand} />
+                                <label htmlFor={item.idbrand}>{item.name}</label>
+                            </div>
                             )) }
                             </div>
                         </div>
