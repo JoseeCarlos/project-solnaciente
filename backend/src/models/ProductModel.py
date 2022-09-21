@@ -9,9 +9,11 @@ class ProductModel():
             connection = get_connection()
             products = []
             with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM product")
+                query = "SELECT idproduct, name, image, barcode, price_int, price_out, presentation, unit, stock, idcategory, is_active, created_at, updated_at, idprovider, iduser, idbrand FROM product"
+                cursor.execute(query)
                 for row in cursor.fetchall():
-                    products.append(Product(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],row[11]).to_JSON())
+                    product = Product(idProduct=row[0], name=row[1], image=row[2], barcode=row[3], price_in=row[4], price_out=row[5], presentation=row[6], unit=row[7], stock=row[8], category_id=row[9], is_active=row[10], created_at=row[11], updated_at=row[12], id_provider=row[13], user_id=row[14], id_brand=row[15])
+                    products.append(product.to_JSON())
                
             connection.close()
             return products
@@ -25,12 +27,11 @@ class ProductModel():
             connection = get_connection()
             product = None
             with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM product WHERE id_product = %s", (id))
+                query = "SELECT idproduct, name, image, barcode, price_int, price_out, presentation, unit, stock, idcategory, is_active, created_at, updated_at, idprovider, iduser, idbrand FROM product WHERE idproduct=%s"
+                cursor.execute(query, (int(id),))
                 row = cursor.fetchone()
-                product = None 
-                if row is not None:
-                    product = Product(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],row[11]).to_JSON()
-                
+                product = Product(idProduct=row[0], name=row[1], image=row[2], barcode=row[3], price_in=row[4], price_out=row[5], presentation=row[6], unit=row[7], stock=row[8], category_id=row[9], is_active=row[10], created_at=row[11], updated_at=row[12], id_provider=row[13], user_id=row[14], id_brand=row[15])
+                product = product.to_JSON()
             connection.close()
             return product
            
@@ -42,7 +43,8 @@ class ProductModel():
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
-                cursor.execute("INSERT INTO product (id, image, barcode, price_in, price_out, presentation, unit, user_id, category_id, is_active, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (product.idProduct, product.image, product.barcode, product.price_in, product.price_out, product.presentation, product.unit, product.user_id, product.category_id, product.is_active, product.created_at, product.updated_at))
+                query = "INSERT INTO product (name, image, barcode, price_int, price_out, presentation, unit, stock, idcategory, updated_at, idprovider, iduser, idbrand) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                cursor.execute(query, (product.name, product.image, product.barcode, product.price_in, product.price_out, product.presentation, product.unit, product.stock, product.updated_at, product.id_provider, product.user_id, product.id_brand))
                 affected_rows = cursor.rowcount
                 connection.commit()
             connection.close()
@@ -55,7 +57,8 @@ class ProductModel():
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM product WHERE id = %s", (product.idProduct))
+                query = "UPDATE product SET is_active=0 WHERE idproduct=%s"
+                cursor.execute(query, (product.id,))
                 affected_rows = cursor.rowcount
                 connection.commit()
             connection.close()
@@ -68,7 +71,8 @@ class ProductModel():
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
-                cursor.execute("UPDATE product SET image = %s, barcode = %s, price_in = %s, price_out = %s, presentation = %s, unit = %s, user_id = %s, category_id = %s, is_active = %s, created_at = %s, updated_at = %s WHERE id = %s", (product.image, product.barcode, product.price_in, product.price_out, product.presentation, product.unit, product.user_id, product.category_id, product.is_active, product.created_at, product.updated_at, product.idProduct))
+                query = "UPDATE product SET name=%s, image=%s, barcode=%s, price_int=%s, price_out=%s, presentation=%s, unit=%s, stock=%s, idcategory=%s, updated_at=%s, idprovider=%s, iduser=%s, idbrand=%s WHERE idproduct=%s"
+                cursor.execute(query, (product.name, product.image, product.barcode, product.price_in, product.price_out, product.presentation, product.unit, product.stock, product.updated_at, product.id_provider, product.user_id, product.id_brand, product.id))
                 affected_rows = cursor.rowcount
                 connection.commit()
             connection.close()
@@ -82,9 +86,11 @@ class ProductModel():
             connection = get_connection()
             products = []
             with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM product WHERE category_id = %s", (category_id))
+                query = "SELECT idproduct, name, image, barcode, price_int, price_out, presentation, unit, stock, idcategory, is_active, created_at, updated_at, idprovider, iduser, idbrand FROM product WHERE idcategory=%s"
+                cursor.execute(query, (int(category_id),))
                 for row in cursor.fetchall():
-                    products.append(Product(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],row[11]).to_JSON())
+                    product = Product(idProduct=row[0], name=row[1], image=row[2], barcode=row[3], price_in=row[4], price_out=row[5], presentation=row[6], unit=row[7], stock=row[8], category_id=row[9], is_active=row[10], created_at=row[11], updated_at=row[12], id_provider=row[13], user_id=row[14], id_brand=row[15])
+                    products.append(product.to_JSON())
                
             connection.close()
             return products

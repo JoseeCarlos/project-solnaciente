@@ -33,6 +33,7 @@ import Crud from './pages/Crud';
 import EmptyPage from './pages/EmptyPage';
 import TimelineDemo from './pages/TimelineDemo';
 import Category from './pages/Category';
+import Provider from './pages/Provider';
 
 import PrimeReact from 'primereact/api';
 import { Tooltip } from 'primereact/tooltip';
@@ -182,7 +183,7 @@ const App = () => {
         {
             label: 'Compras', icon: 'pi pi-fw pi-clone',
             items: [
-                { label: 'Proveedores', icon: 'pi pi-fw pi-user-edit', to: '/category' },
+                { label: 'Proveedores', icon: 'pi pi-fw pi-user-edit', to: '/provider' },
                 { label: 'Realizar compra', icon: 'pi pi-fw pi-user-edit', to: '/category' },
                 { label: 'historial de precios', icon: 'pi pi-fw pi-user-edit', to: '/category' },
 
@@ -265,6 +266,7 @@ const App = () => {
                     <Route path="/empty" component={EmptyPage} />
                     <Route path="/documentation" component={Documentation} />
                     <Route path="/category" component={Category} />
+                    <Route path="/provider" component={Provider} />
                 </div>
 
                 <AppFooter layoutColorMode={layoutColorMode} />

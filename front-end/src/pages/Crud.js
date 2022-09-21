@@ -16,15 +16,22 @@ import { ProductService } from '../service/ProductService';
 
 const Crud = () => {
     let emptyProduct = {
-        id: null,
+        idProduct: null,
         name: '',
         image: null,
-        description: '',
-        category: null,
-        price: 0,
-        quantity: 0,
-        rating: 0,
-        inventoryStatus: 'INSTOCK'
+        barcode: '',
+        price_in: null,
+        price_out: null,
+        presentation: '',
+        unit: '',
+        stock: null,
+        category_id: null,
+        is_active: null,
+        created_at: null,
+        updated_at: null,
+        idprovider: null,
+        iduser: null,
+
     };
 
     const [products, setProducts] = useState(null);
@@ -35,12 +42,43 @@ const Crud = () => {
     const [selectedProducts, setSelectedProducts] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
+    const [categories, setCategories] = useState([]);
     const toast = useRef(null);
     const dt = useRef(null);
+    const [providers, setProviders] = useState([]);
+    const [brands, setBrands] = useState([]);
 
     useEffect(() => {
-        const productService = new ProductService();
-        productService.getProducts().then(data => setProducts(data));
+        // const productService = new ProductService();
+        // productService.getProducts().then(data => setProducts(data));
+        
+        
+        
+        console.log(categories.length);
+        fetch("/api/products/").then((res)=>res.json().then((data)=> {
+            setProducts(data)
+            data.map((item)=>console.log(item.idProduct))
+          }
+          ));
+
+        fetch("/api/categories/").then((res)=>res.json().then((data)=> {
+            setCategories(data)
+            console.log(categories.length);
+          }
+            ));
+        
+        fetch("/api/providers/").then((res)=>res.json().then((data)=> {
+            setProviders(data)
+            console.log(providers.length);
+          }
+            ));
+
+        fetch("/api/brands/").then((res)=>res.json().then((data)=> {
+            setBrands(data)
+            console.log(brands.length);
+          }
+            ));
+        
     }, []);
 
     const formatCurrency = (value) => {
@@ -148,7 +186,8 @@ const Crud = () => {
 
     const onCategoryChange = (e) => {
         let _product = { ...product };
-        _product['category'] = e.value;
+        _product['category_id'] = e.value;
+        console.log(_product);
         setProduct(_product);
     }
 
@@ -174,6 +213,9 @@ const Crud = () => {
                 <div className="my-2">
                     <Button label="Nuevo" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
                     <Button label="Borrar" icon="pi pi-trash" className="p-button-danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
+                    { categories.map((item)=>(
+                        <div>{item.id}</div>
+                    )) }
                 </div>
             </React.Fragment>
         )
@@ -205,6 +247,54 @@ const Crud = () => {
             </>
         );
     }
+    const barcodeBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Barcode</span>
+                {rowData.barcode}
+            </>
+        );
+    }
+    const imagepBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Image</span>
+                {rowData.image}
+            </>
+        );
+    }
+    const priceinBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Price in</span>
+                {rowData.price_in}
+            </>
+        );
+    }
+    const priceoutBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Price Out</span>
+                {rowData.price_out}
+            </>
+        );
+    }
+    const presentationBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Price Out</span>
+                {rowData.price_out}
+            </>
+        );
+    }
+    const categoryBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Category</span>
+                {rowData.category}
+            </>
+        );
+    }
 
     const imageBodyTemplate = (rowData) => {
         return (
@@ -224,11 +314,11 @@ const Crud = () => {
         );
     }
 
-    const categoryBodyTemplate = (rowData) => {
+    const categorysBodyTemplate = (rowData) => {
         return (
             <>
                 <span className="p-column-title">Categoría</span>
-                {rowData.category}
+                {rowData.category_id}
             </>
         );
     }
@@ -302,13 +392,20 @@ const Crud = () => {
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
                         globalFilter={globalFilter} emptyMessage="No products found." header={header} responsiveLayout="scroll">
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem'}}></Column>
-                        <Column field="code" header="Code" sortable body={codeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        {/* <Column field="code" header="Code" sortable body={codeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column> */}
                         <Column field="name" header="Name" sortable body={nameBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column header="Image" body={imageBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="barcode" header="Barcode" sortable body={barcodeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="image" header="Image" sortable body={imagepBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="Presentation" header="Presentation" sortable body={priceoutBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="Category" header="Category" sortable body={categorysBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="PriceInt" header="PriceInt" sortable body={priceinBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="PriceOut" header="PriceOut" sortable body={presentationBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+
+                        {/* <Column header="Image" body={imageBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="price" header="Price" body={priceBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '8rem' }}></Column>
                         <Column field="category" header="Category" sortable body={categoryBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column> */}
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
@@ -320,33 +417,88 @@ const Crud = () => {
                             {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
                         </div>
                         <div className="field">
-                            <label htmlFor="description">Descripción</label>
+                            <label htmlFor="price">image</label>
+                            <FileUpload name="demo" url="./upload" mode="basic" />
+                        </div>
+                        <div className="field">
+                            <label htmlFor="barcode">Codigo de Barra</label>
+                            <InputText id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                        </div>
+                        <div className="formgrid grid">
+                            <div className="field col">
+                                <label htmlFor="price">Precio de compra</label>
+                                <InputNumber id="price" value={product.price} onValueChange={(e) => onInputNumberChange(e, 'price')} mode="currency" currency="USD" locale="en-US" />
+                            </div>
+                            <div className="field col">
+                                <label htmlFor="quantity">Precio de venta</label>
+                                <InputNumber id="quantity" value={product.quantity} onValueChange={(e) => onInputNumberChange(e, 'quantity')} integeronly />
+                            </div>
+                        </div>
+                        <div className="formgrid grid">
+                            <div className="field col">
+                                <label htmlFor="barcode">Presentacion</label>
+                                <InputText id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                            </div>
+                            <div className="field col">
+                            <label htmlFor="barcode">Unidad de medida</label>
+                            <InputText id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                            </div>
+                        </div>
+                        {/* <div className="field">
+                            <label htmlFor="barcode">Presentacion</label>
+                            <InputText id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                        </div>
+                        <div className="field">
+                            <label htmlFor="barcode">Unidad de medida</label>
+                            <InputText id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                        </div> */}
+                        <div className="field">
+                            <label htmlFor="barcode">Stock</label>
                             <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
                         </div>
+                       
 
                         <div className="field">
                             <label className="mb-3">Categoria</label>
                             <div className="formgrid grid">
+                           
+                            { categories.map((item)=>(
+                                
                                 <div className="field-radiobutton col-6">
-                                    <RadioButton inputId="category1" name="category" value="Accessories" onChange={onCategoryChange} checked={product.category === 'Accessories'} />
-                                    <label htmlFor="category1">Accessories</label>
+                                    <RadioButton inputId={item.id} name="category" value={item.id} onChange={onCategoryChange} checked={product.category_id === item.id} />
+                                    <label htmlFor={item.id}>{item.name}</label>
                                 </div>
+                            )) }
+                            </div>
+                        </div>
+                        <div className="field">
+                            <label className="mb-3">Proveedor</label>
+                            <div className="formgrid grid">
+                           
+                            { providers.map((item)=>(
+                                
                                 <div className="field-radiobutton col-6">
-                                    <RadioButton inputId="category2" name="category" value="Clothing" onChange={onCategoryChange} checked={product.category === 'Clothing'} />
-                                    <label htmlFor="category2">Clothing</label>
+                                    <RadioButton inputId={item.idprovider} name="category" value={item.idprovider} onChange={onCategoryChange} checked={product.idprovider === item.idprovider} />
+                                    <label htmlFor={item.id}>{item.name}</label>
                                 </div>
+                            )) }
+                            </div>
+                        </div>
+                        <div className="field">
+                            <label className="mb-3">Marca</label>
+                            <div className="formgrid grid">
+                           
+                            { categories.map((item)=>(
+                                
                                 <div className="field-radiobutton col-6">
-                                    <RadioButton inputId="category3" name="category" value="Electronics" onChange={onCategoryChange} checked={product.category === 'Electronics'} />
-                                    <label htmlFor="category3">Electronics</label>
+                                    <RadioButton inputId={item.id} name="category" value={item.id} onChange={onCategoryChange} checked={product.category_id === item.id} />
+                                    <label htmlFor={item.id}>{item.name}</label>
                                 </div>
-                                <div className="field-radiobutton col-6">
-                                    <RadioButton inputId="category4" name="category" value="Fitness" onChange={onCategoryChange} checked={product.category === 'Fitness'} />
-                                    <label htmlFor="category4">Fitness</label>
-                                </div>
+                            )) }
                             </div>
                         </div>
 
-                        <div className="formgrid grid">
+                        {/* <div className="formgrid grid">
                             <div className="field col">
                                 <label htmlFor="price">Price</label>
                                 <InputNumber id="price" value={product.price} onValueChange={(e) => onInputNumberChange(e, 'price')} mode="currency" currency="USD" locale="en-US" />
@@ -355,7 +507,7 @@ const Crud = () => {
                                 <label htmlFor="quantity">Quantity</label>
                                 <InputNumber id="quantity" value={product.quantity} onValueChange={(e) => onInputNumberChange(e, 'quantity')} integeronly />
                             </div>
-                        </div>
+                        </div> */}
                     </Dialog>
 
                     <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
