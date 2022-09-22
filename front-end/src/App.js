@@ -34,6 +34,7 @@ import EmptyPage from './pages/EmptyPage';
 import TimelineDemo from './pages/TimelineDemo';
 import Category from './pages/Category';
 import Provider from './pages/Provider';
+import User from './pages/User';
 
 import PrimeReact from 'primereact/api';
 import { Tooltip } from 'primereact/tooltip';
@@ -168,7 +169,8 @@ const App = () => {
             label: 'Actividades', icon: 'pi pi-fw pi-sitemap',
             items: [             
                 { label: 'Tablas', icon: 'pi pi-fw pi-table', to: '/table' },
-                { label: 'Lista de Productos', icon: 'pi pi-fw pi-list', to: '/list' },            
+                { label: 'Lista de Productos', icon: 'pi pi-fw pi-list', to: '/list' },
+                { label: 'Lista de Usuarios', icon: 'pi pi-fw pi-users', to: '/user' },            
             ]
         },      
         {
@@ -267,6 +269,7 @@ const App = () => {
                     <Route path="/documentation" component={Documentation} />
                     <Route path="/category" component={Category} />
                     <Route path="/provider" component={Provider} />
+                    <Route path="/user" component={User} />
                 </div>
 
                 <AppFooter layoutColorMode={layoutColorMode} />
