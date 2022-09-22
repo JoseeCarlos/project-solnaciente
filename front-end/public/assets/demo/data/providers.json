@@ -1,0 +1,35 @@
+{
+    "data": [
+        {"id": "1000","code": "f230fh0g3","name": "Bamboo Watch","description": "Product Description","direction": "bamboo-watch.jpg","phone": 65,"category": "Accessories","quantity": 24,"providerStatus": "INSTOCK","rating": 5},
+        {"id": "1001","code": "nvklal433","name": "Black Watch","description": "Product Description","direction": "black-watch.jpg","phone": 72,"category": "Accessories","quantity": 61,"providerStatus": "INSTOCK","rating": 4},
+        {"id": "1002","code": "zz21cz3c1","name": "Blue Band","description": "Product Description","direction": "blue-band.jpg","phone": 79,"category": "Fitness","quantity": 2,"providerStatus": "LOWSTOCK","rating": 3},
+        {"id": "1003","code": "244wgerg2","name": "Blue T-Shirt","description": "Product Description","direction": "blue-t-shirt.jpg","phone": 29,"category": "Clothing","quantity": 25,"providerStatus": "INSTOCK","rating": 5},
+        {"id": "1004","code": "h456wer53","name": "Bracelet","description": "Product Description","direction": "bracelet.jpg","phone": 15,"category": "Accessories","quantity": 73,"providerStatus": "INSTOCK","rating": 4},
+        {"id": "1005","code": "av2231fwg","name": "Brown Purse","description": "Product Description","direction": "brown-purse.jpg","phone": 120,"category": "Accessories","quantity": 0,"providerStatus": "OUTOFSTOCK","rating": 4},
+        {"id": "1006","code": "bib36pfvm","name": "Chakra Bracelet","description": "Product Description","direction": "chakra-bracelet.jpg","phone": 32,"category": "Accessories","quantity": 5,"providerStatus": "LOWSTOCK","rating": 3},
+        {"id": "1007","code": "mbvjkgip5","name": "Galaxy Earrings","description": "Product Description","direction": "galaxy-earrings.jpg","phone": 34,"category": "Accessories","quantity": 23,"providerStatus": "INSTOCK","rating": 5},
+        {"id": "1008","code": "vbb124btr","name": "Game Controller","description": "Product Description","direction": "game-controller.jpg","phone": 99,"category": "Electronics","quantity": 2,"providerStatus": "LOWSTOCK","rating": 4},
+        {"id": "1009","code": "cm230f032","name": "Gaming Set","description": "Product Description","direction": "gaming-set.jpg","phone": 299,"category": "Electronics","quantity": 63,"providerStatus": "INSTOCK","rating": 3},
+        {"id": "1010","code": "plb34234v","name": "Gold Phone Case","description": "Product Description","direction": "gold-phone-case.jpg","phone": 24,"category": "Accessories","quantity": 0,"providerStatus": "OUTOFSTOCK","rating": 4},
+        {"id": "1011","code": "4920nnc2d","name": "Green Earbuds","description": "Product Description","direction": "green-earbuds.jpg","phone": 89,"category": "Electronics","quantity": 23,"providerStatus": "INSTOCK","rating": 4},
+        {"id": "1012","code": "250vm23cc","name": "Green T-Shirt","description": "Product Description","direction": "green-t-shirt.jpg","phone": 49,"category": "Clothing","quantity": 74,"providerStatus": "INSTOCK","rating": 5},
+        {"id": "1013","code": "fldsmn31b","name": "Grey T-Shirt","description": "Product Description","direction": "grey-t-shirt.jpg","phone": 48,"category": "Clothing","quantity": 0,"providerStatus": "OUTOFSTOCK","rating": 3},
+        {"id": "1014","code": "waas1x2as","name": "Headphones","description": "Product Description","direction": "headphones.jpg","phone": 175,"category": "Electronics","quantity": 8,"providerStatus": "LOWSTOCK","rating": 5},
+        {"id": "1015","code": "vb34btbg5","name": "Light Green T-Shirt","description": "Product Description","direction": "light-green-t-shirt.jpg","phone": 49,"category": "Clothing","quantity": 34,"providerStatus": "INSTOCK","rating": 4},
+        {"id": "1016","code": "k8l6j58jl","name": "Lime Band","description": "Product Description","direction": "lime-band.jpg","phone": 79,"category": "Fitness","quantity": 12,"providerStatus": "INSTOCK","rating": 3},
+        {"id": "1017","code": "v435nn85n","name": "Mini Speakers","description": "Product Description","direction": "mini-speakers.jpg","phone": 85,"category": "Clothing","quantity": 42,"providerStatus": "INSTOCK","rating": 4},
+        {"id": "1018","code": "09zx9c0zc","name": "Painted Phone Case","description": "Product Description","direction": "painted-phone-case.jpg","phone": 56,"category": "Accessories","quantity": 41,"providerStatus": "INSTOCK","rating": 5},
+        {"id": "1019","code": "mnb5mb2m5","name": "Pink Band","description": "Product Description","direction": "pink-band.jpg","phone": 79,"category": "Fitness","quantity": 63,"providerStatus": "INSTOCK","rating": 4},
+        {"id": "1020","code": "r23fwf2w3","name": "Pink Purse","description": "Product Description","direction": "pink-purse.jpg","phone": 110,"category": "Accessories","quantity": 0,"providerStatus": "OUTOFSTOCK","rating": 4},
+        {"id": "1021","code": "pxpzczo23","name": "Purple Band","description": "Product Description","direction": "purple-band.jpg","phone": 79,"category": "Fitness","quantity": 6,"providerStatus": "LOWSTOCK","rating": 3},
+        {"id": "1022","code": "2c42cb5cb","name": "Purple Gemstone Necklace","description": "Product Description","direction": "purple-gemstone-necklace.jpg","phone": 45,"category": "Accessories","quantity": 62,"providerStatus": "INSTOCK","rating": 4},
+        {"id": "1023","code": "5k43kkk23","name": "Purple T-Shirt","description": "Product Description","direction": "purple-t-shirt.jpg","phone": 49,"category": "Clothing","quantity": 2,"providerStatus": "LOWSTOCK","rating": 5},
+        {"id": "1024","code": "lm2tny2k4","name": "Shoes","description": "Product Description","direction": "shoes.jpg","phone": 64,"category": "Clothing","quantity": 0,"providerStatus": "INSTOCK","rating": 4},
+        {"id": "1025","code": "nbm5mv45n","name": "Sneakers","description": "Product Description","direction": "sneakers.jpg","phone": 78,"category": "Clothing","quantity": 52,"providerStatus": "INSTOCK","rating": 4},
+        {"id": "1026","code": "zx23zc42c","name": "Teal T-Shirt","description": "Product Description","direction": "teal-t-shirt.jpg","phone": 49,"category": "Clothing","quantity": 3,"providerStatus": "LOWSTOCK","rating": 3},
+        {"id": "1027","code": "acvx872gc","name": "Yellow Earbuds","description": "Product Description","direction": "yellow-earbuds.jpg","phone": 89,"category": "Electronics","quantity": 35,"providerStatus": "INSTOCK","rating": 3},
+        {"id": "1028","code": "tx125ck42","name": "Yoga Mat","description": "Product Description","direction": "yoga-mat.jpg","phone": 20,"category": "Fitness","quantity": 15,"providerStatus": "INSTOCK","rating": 5},
+        {"id": "1029","code": "gwuby345v","name": "Yoga Set","description": "Product Description","direction": "yoga-set.jpg","phone": 20,"category": "Fitness","quantity": 25,"providerStatus": "INSTOCK","rating": 8}
+    ]
+}
+    
