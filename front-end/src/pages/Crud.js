@@ -18,7 +18,7 @@ const Crud = () => {
     let emptyProduct = {
         idProduct: null,
         name: '',
-        image: null,
+        image: '',
         barcode: '',
         price_in: null,
         price_out: null,
@@ -28,9 +28,9 @@ const Crud = () => {
         category_id: null,
         is_active: null,
         created_at: null,
-        updated_at: null,
-        idprovider: null,
-        iduser: null,
+        updated_at: '2022-01-01 00:00:00',
+        id_provider: null,
+        user_id: 2,
         id_brand: null,
 
     };
@@ -112,16 +112,32 @@ const Crud = () => {
             let _products = [...products];
             let _product = { ...product };
             if (product.idProduct) {
-                const index = findIndexById(product.idProduct);
+                // const index = findIndexById(product.idProduct);
 
-                _products[index] = _product;
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                // _products[index] = _product;
+                // toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                console.log("update");
             }
             else {
-                _product.idProduct = createId();
-                _products.push(_product);
+                // _product.idProduct = createId();
+                fetch("/api/products/add", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(product)
+                }).then((res)=>res.json().then((data)=> {
+                    console.log(data);}
+                    ));
+                console.log("create");
+                console.log(product);
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
             }
+
+            setProducts(_products);
+            setProductDialog(false);
+            setProduct(emptyProduct);
+
         }
     }
 
@@ -189,13 +205,13 @@ const Crud = () => {
 
     const onProviderChange = (e) => {
         let _product = { ...product };
-        _product['idprovider'] = e.value;
+        _product['id_provider'] = e.value;
         console.log(_product);
         setProduct(_product);
     }
     const onBrandChange = (e) => {
         let _product = { ...product };
-        _product['idbrand'] = e.value;
+        _product['id_brand'] = e.value;
         console.log(_product);
         setProduct(_product);
     }
@@ -203,6 +219,7 @@ const Crud = () => {
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || '';
         let _product = { ...product };
+        console.log(val+" "+name);
         _product[`${name}`] = val;
 
         setProduct(_product);
@@ -216,15 +233,21 @@ const Crud = () => {
         setProduct(_product);
     }
 
+    const onInputFileChange = (e, name) => {
+        const val = e.files[0];
+        let _product = { ...product };
+        console.log(val+" "+name);
+        _product[`${name}`] = val;
+
+        setProduct(_product);
+    }
+
     const leftToolbarTemplate = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
                     <Button label="Nuevo" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
                     <Button label="Borrar" icon="pi pi-trash" className="p-button-danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
-                    { categories.map((item)=>(
-                        <div>{item.id}</div>
-                    )) }
                 </div>
             </React.Fragment>
         )
@@ -387,6 +410,16 @@ const Crud = () => {
             <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteSelectedProducts} />
         </>
     );
+    const myUploader = (event,name) => {
+
+        const val = event.files[0].name;
+        let _product = { ...product };
+        console.log(val+" "+name);
+        _product[`${name}`] = val;
+
+        setProduct(_product);
+
+    }
 
     return (
         <div className="grid crud-demo">
@@ -426,31 +459,38 @@ const Crud = () => {
                             {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
                         </div>
                         <div className="field">
-                            <label htmlFor="price">image{product.image}</label>
-                            <FileUpload name="demo" value={product.image} url="./upload" mode="basic" />
+                            <label htmlFor="image">Imagen</label>
+                            <FileUpload name="demo[]" url="./upload" customUpload uploadHandler={(e)=> myUploader(e,'image')} />
+                            {submitted && !product.image && <small className="p-invalid">Image is required.</small>}
                         </div>
                         <div className="field">
-                            <label htmlFor="barcode">Codigo de Barra</label>
-                            <InputText id="description" value={product.barcode} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                            <label htmlFor="barcode">Codigo de Barras</label>
+                            <InputText id="barcode" value={product.barcode} onChange={(e) => onInputChange(e, 'barcode')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.barcode })} />
+                            {submitted && !product.barcode && <small className="p-invalid">Barcode is required.</small>}
+                        </div>
+                       
+                        <div className="formgrid grid">
+                            <div className="field col">
+                                <label htmlFor="price_in">Precio de compra</label>
+                                <InputNumber id="price_in" value={product.price_in} onChange={(e) => onInputNumberChange(e, 'price_in')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.price_in })} />
+                                {/* {submitted && !product.price_in && <small className="p-invalid">Price in is required.</small>} */}
+                            </div>
+                            <div className="field col">
+                                <label htmlFor="priceout">Precio de Venta</label>
+                                <InputNumber id="priceout" value={product.price_out} onChange={(e) => onInputNumberChange(e, 'price_out')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.price_out })} />
+                                {/* {submitted && !product.price_out && <small className="p-invalid">Price out is required.</small>} */}
+                            </div>
                         </div>
                         <div className="formgrid grid">
                             <div className="field col">
-                                <label htmlFor="price">Precio de compra</label>
-                                <InputNumber id="price" value={product.price_in} onValueChange={(e) => onInputNumberChange(e, 'price')} mode="currency" currency="USD" locale="en-US" />
+                                <label htmlFor="presentation">Presentacion</label>
+                                <InputText id="presentation" value={product.presentation} onChange={(e) => onInputChange(e, 'presentation')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.presentation })} />
+                                {submitted && !product.presentation && <small className="p-invalid">Presentation is required.</small>}
                             </div>
                             <div className="field col">
-                                <label htmlFor="quantity">Precio de venta</label>
-                                <InputNumber id="quantity" value={product.price_out} onValueChange={(e) => onInputNumberChange(e, 'quantity')} integeronly />
-                            </div>
-                        </div>
-                        <div className="formgrid grid">
-                            <div className="field col">
-                                <label htmlFor="barcode">Presentacion</label>
-                                <InputText id="description" value={product.presentation} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
-                            </div>
-                            <div className="field col">
-                            <label htmlFor="barcode">Unidad de medida</label>
-                            <InputText id="description" value={product.unit} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                                <label htmlFor="unit">Unidad de medida</label>
+                                <InputText id="unit" value={product.unit} onChange={(e) => onInputChange(e, 'unit')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.unit })} />
+                                {submitted && !product.unit && <small className="p-invalid">unit is required.</small>}
                             </div>
                         </div>
                         {/* <div className="field">
@@ -462,8 +502,9 @@ const Crud = () => {
                             <InputText id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
                         </div> */}
                         <div className="field">
-                            <label htmlFor="barcode">Stock</label>
-                            <InputTextarea id="description" value={product.stock} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                                <label htmlFor="stock">stock</label>
+                                <InputNumber id="stock" value={product.stock} onChange={(e) => onInputNumberChange(e, 'stock')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.stock })} />
+                                {submitted && !product.stock && <small className="p-invalid">Stock is required.</small>}
                         </div>
                        
 
@@ -487,8 +528,8 @@ const Crud = () => {
                             { providers.map((item)=>(
                                 
                                 <div className="field-radiobutton col-6">
-                                    <RadioButton inputId={item.idprovider} name="category" value={item.idprovider} onChange={onProviderChange} checked={product.idprovider === item.idprovider} />
-                                    <label htmlFor={item.idprovider}>{item.name}</label>
+                                    <RadioButton inputId={item.idProvider} name="category" value={item.idProvider} onChange={onProviderChange} checked={product.id_provider === item.idProvider} />
+                                    <label htmlFor={item.idProvider}>{item.name}</label>
                                 </div>
                             )) }
                             </div>

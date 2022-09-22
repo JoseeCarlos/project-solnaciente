@@ -1,6 +1,6 @@
 class Product():
 
-    def __init__(self,idProduct,image=None,barcode=None,price_in=None,price_out=None,presentation=None,unit=None, stock=None,category_id=None,is_active=None,created_at=None,updated_at=None,name=None,id_provider=None,user_id=None, id_brand=None):
+    def __init__(self,idProduct=None,image=None,barcode=None,price_in=None,price_out=None,presentation=None,unit=None, stock=None,category_id=None,is_active=None,created_at=None,updated_at=None,name=None,id_provider=None,user_id=None, id_brand=None):
         self.idProduct = idProduct
         self.name = name
         self.image = image

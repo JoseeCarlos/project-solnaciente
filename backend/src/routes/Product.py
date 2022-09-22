@@ -29,15 +29,12 @@ def get_product(id):
 @main.route('/add', methods=['POST'])
 def add_product():
     try:
-        name = request.json['name']
-        price = float(request.json['price'])
-        category = request.json['category']
-        product = Product(str(uuid.uuid4()), name, price, category)
+        data = request.get_json()
+        product = Product(name=data['name'], image=data['image'], barcode=data['barcode'], price_in=data['price_in'], price_out=data['price_out'], presentation=data['presentation'], unit=data['unit'], stock=data['stock'], category_id=data['category_id'], id_provider=data['id_provider'], user_id=data['user_id'], id_brand=data['id_brand'],updated_at=data['updated_at'])
         affected_rows = ProductModel.add_product(product)
         if affected_rows == 1:
-            return jsonify(product.id)
-        else:
-            return jsonify({'error': 'Product not added'}), 500
+            return jsonify({'message': 'Product added successfully'}), 201
+        return jsonify({'error': 'Product not added'}), 500
 
     except Exception as ex:
         return jsonify({'error': str(ex)}), 500
