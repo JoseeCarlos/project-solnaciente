@@ -9,10 +9,12 @@ class UserModel():
                 connection = get_connection()
                 users = []
                 with connection.cursor() as cursor:
-                    cursor.execute("SELECT * FROM users")
-                    for row in cursor.fetchall():
-                        users.append(User(row[0],row[1],row[2],row[3],row[4],row[5],row[6]).to_JSON())
-                
+                    query = "SELECT iduser, name, first_name, second_name, ci, number, username, password, is_active, created_at, updated_at, idrole FROM user"
+                    cursor.execute(query)
+                    result = cursor.fetchall()
+                    for row in result:
+                        user = User(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],row[11])
+                        users.append(user.to_JSON())
                 connection.close()
                 return users
             except Exception as ex:
@@ -40,8 +42,8 @@ class UserModel():
             try:
                 connection = get_connection()
                 with connection.cursor() as cursor:
-                    cursor.execute("INSERT INTO users (id, username, password, email, created, updated, deleted) VALUES (%s, %s, %s, %s, %s, %s, %s)", (user.id, user.username, user.password, user.email, user.created, user.updated, user.deleted))
-                    affected_rows = cursor.rowcount
+                    query = "INSERT INTO user (name, first_name, second_name, ci, number, username, password, updated_at, idrole) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                    affected_rows = cursor.execute(query, (user.name, user.first_name, user.second_name, user.ci, user.number, user.username, user.password, user.updated_at, user.idrole))
                     connection.commit()
                 connection.close()
                 return affected_rows
@@ -53,8 +55,8 @@ class UserModel():
             try:
                 connection = get_connection()
                 with connection.cursor() as cursor:
-                    cursor.execute("DELETE FROM users WHERE id = %s", (user.id))
-                    affected_rows = cursor.rowcount
+                    query = "UPDATE user SET is_active = 0 WHERE iduser = %s"
+                    affected_rows = cursor.execute(query, (user.iduser,))
                     connection.commit()
                 connection.close()
                 return affected_rows
@@ -66,8 +68,8 @@ class UserModel():
             try:
                 connection = get_connection()
                 with connection.cursor() as cursor:
-                    cursor.execute("UPDATE users SET username = %s, password = %s, email = %s, created = %s, updated = %s, deleted = %s WHERE id = %s", (user.username, user.password, user.email, user.created, user.updated, user.deleted, user.id))
-                    affected_rows = cursor.rowcount
+                    query = "UPDATE user SET name = %s, first_name = %s, second_name = %s, ci = %s, number = %s, username = %s, password = %s, updated_at = %s, idrole = %s WHERE iduser = %s"
+                    affected_rows = cursor.execute(query, (user.name, user.first_name, user.second_name, user.ci, user.number, user.username, user.password, user.updated_at, user.idrole, user.iduser))
                     connection.commit()
                 connection.close()
                 return affected_rows

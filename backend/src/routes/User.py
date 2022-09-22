@@ -1,6 +1,7 @@
+from pydoc import describe
 from sre_parse import CATEGORIES
 from flask import Blueprint, jsonify, request
-from models.User import UserModel
+from models.UserModel import UserModel 
 from models.entities.User import User
 
 main = Blueprint('user_blueprint', __name__)
@@ -27,17 +28,11 @@ def get_user(id):
 @main.route('/add', methods=['POST'])
 def add_user():
     try:
-        name = request.json['name']
-        phone = request.json['phone']
-        email = request.json['email']
-        password = request.json['password']
-        role = request.json['role']
-        user = User(name, phone, email, password, role)
+        user = User(name=request.json['name'],first_name=request.json['first_name'], second_name=request.json['second_name'], ci=request.json['ci'], number=request.json['number'], username= request.json['username'], password=request.json['password'], updated_at=request.json['updated_at'], idrole=request.json['idrole'])
         affected_rows = UserModel.add_user(user)
-        if affected_rows == 1:
-            return jsonify(user.id)
-        else:
+        if affected_rows == 0:
             return jsonify({'error': 'User not added'}), 500
+        return jsonify({'message': 'User added'}), 201
 
     except Exception as ex:
         return jsonify({'error': str(ex)}), 500
@@ -45,12 +40,11 @@ def add_user():
 @main.route('/delete/<id>', methods=['DELETE'])
 def delete_user(id):
     try:
-        user = User(str(id))
+        user = User(iduser=str(id))
         affected_rows = UserModel.delete_user(user)
-        if affected_rows == 1:
-            return jsonify(user.id)
-        else:
+        if affected_rows == 0:
             return jsonify({'error': 'User not deleted'}), 404
+        return jsonify({'message': 'User deleted'}), 200
 
     except Exception as ex:
         return jsonify({'error': str(ex)}), 500
@@ -58,17 +52,11 @@ def delete_user(id):
 @main.route('/update/<id>', methods=['PUT'])
 def update_user(id):
     try:
-        name = request.json['name']
-        phone = request.json['phone']
-        email = request.json['email']
-        password = request.json['password']
-        role = request.json['role']
-        user = User(str(id), name, phone, email, password, role)
+        user = User(iduser=str(id), name=request.json['name'],first_name=request.json['first_name'], second_name=request.json['second_name'], ci=request.json['ci'], number=request.json['number'], username= request.json['username'], password=request.json['password'], updated_at=request.json['updated_at'], idrole=request.json['idrole'])
         affected_rows = UserModel.update_user(user)
-        if affected_rows == 1:
-            return jsonify(user.id)
-        else:
-            return jsonify({'error': 'User not updated'}), 404
+        if affected_rows == 0:
+            return jsonify({'error': 'User not updated'}), 500
+        return jsonify({'message': 'User updated'}), 201
 
     except Exception as ex:
         return jsonify({'error': str(ex)}), 500
