@@ -27,15 +27,11 @@ def get_provider(id):
 @main.route('/add', methods=['POST'])
 def add_provider():
     try:
-        name = request.json['name']
-        phone = request.json['phone']
-        email = request.json['email']
-        provider = Provider(name, phone, email)
+        provider = Provider(name=request.json['name'], description=request.json['description'], direction=request.json['direction'], phone=request.json['phone'], updated_at=request.json['updated_at'])
         affected_rows = ProviderModel.add_provider(provider)
-        if affected_rows == 1:
-            return jsonify(provider.id)
-        else:
+        if affected_rows == 0:
             return jsonify({'error': 'Provider not added'}), 500
+        return jsonify({'message': 'Provider added'}), 201
 
     except Exception as ex:
         return jsonify({'error': str(ex)}), 500
@@ -43,12 +39,11 @@ def add_provider():
 @main.route('/delete/<id>', methods=['DELETE'])
 def delete_provider(id):
     try:
-        provider = Provider(str(id))
+        provider = Provider(idProvider=str(id))
         affected_rows = ProviderModel.delete_provider(provider)
-        if affected_rows == 1:
-            return jsonify(provider.id)
-        else:
+        if affected_rows == 0:
             return jsonify({'error': 'Provider not deleted'}), 404
+        return jsonify({'message': 'Provider deleted'}), 200
 
     except Exception as ex:
         return jsonify({'error': str(ex)}), 500
@@ -56,15 +51,11 @@ def delete_provider(id):
 @main.route('/update/<id>', methods=['PUT'])
 def update_provider(id):
     try:
-        name = request.json['name']
-        phone = request.json['phone']
-        email = request.json['email']
-        provider = Provider(str(id), name, phone, email)
+        provider = Provider(idProvider=id, name=request.json['name'], description=request.json['description'], direction=request.json['direction'], phone=request.json['phone'], updated_at=request.json['updated_at'])
         affected_rows = ProviderModel.update_provider(provider)
-        if affected_rows == 1:
-            return jsonify(provider.id)
-        else:
-            return jsonify({'error': 'Provider not updated'}), 404
+        if affected_rows == 0:
+            return jsonify({'error': 'Provider not updated'}), 500
+        return jsonify({'message': 'Provider updated'}), 201 
 
     except Exception as ex:
         return jsonify({'error': str(ex)}), 500

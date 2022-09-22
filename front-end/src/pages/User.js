@@ -8,19 +8,23 @@ import { Toolbar } from 'primereact/toolbar';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { UserService } from '../service/UserService';
+import { RadioButton } from 'primereact/radiobutton';
 // import { Select } from 'react-select'
 
 const Crud = () => {
     let emptyUser = {
-        id: null,
-        name: '',
-        last_name: '',
-        second_last_name: '',
-        ci: '',
-        number: 0,
-        username: '',
-        role: 0,
-        userStatus: 0
+        iduser : null,
+        name : '',
+        first_name : '',
+        second_name : '',
+        ci : '',
+        number : '',
+        username : '',
+        password : '',
+        is_active : '',
+        created_at : '',
+        updated_at : '2022-05-01 00:00:00',
+        idrole : '',
     };
 
     const [users, setUsers] = useState(null);
@@ -33,10 +37,24 @@ const Crud = () => {
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
+    const [roles, setRoles] = useState([]);
 
     useEffect(() => {
-        const userService = new UserService();
-        userService.getUsers().then(data => setUsers(data));
+        // const userService = new UserService();
+        // userService.getUsers().then(data => setUsers(data));
+        fetch('/api/users/')
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                setUsers(data)})
+
+        
+        fetch('/api/roles/')
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                setRoles(data)}
+            )
     }, []);
 
     const formatCurrency = (value) => {
@@ -67,22 +85,51 @@ const Crud = () => {
 
         if (user.name.trim()) {
             let _users = [...users];
-            let _user = { ...user };
-            if (user.id) {
-                const index = findIndexById(user.id);
-
-                _users[index] = _user;
-                toast.current.show({ severity: 'success', summary: '¡Éxito!', detail: 'Usuario Actualizado', life: 3000 });
+            let _user = {...user};
+            if (user.iduser) {
+                
+                console.log(_user);
+                console.log('update');
+                fetch('/api/users/update/'+user.iduser, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(_user)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    }
+                )
+                // const userService = new UserService();
+                // userService.updateUser(_user).then(data => setUsers(data));
+                // const index = findIndexById(user.iduser
             }
             else {
-                _user.id = createId();
-                _users.push(_user);
-                toast.current.show({ severity: 'success', summary: '¡Éxito!', detail: 'Usuario Creado', life: 3000 });
+               
+                user.password=generatePassword();
+                user.username=generateUsername(user.name, user.first_name, user.second_name);
+                console.log(user);
+                fetch('/api/users/add', {
+                    method: 'POST',
+                    body: JSON.stringify(user),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+
+                    }
+                )
             }
 
-            setUsers(_users);
-            setUserDialog(false);
-            setUser(emptyUser);
+            // setUsers(_users);
+            // setUserDialog(false);
+            // setUser(emptyUser);
         }
     }
 
@@ -97,11 +144,18 @@ const Crud = () => {
     }
 
     const deleteUser = () => {
-        let _users = users.filter(val => val.id !== user.id);
-        setUsers(_users);
-        setDeleteUserDialog(false);
-        setUser(emptyUser);
-        toast.current.show({ severity: 'success', summary: '¡Éxito!', detail: 'Usuario Eliminado', life: 3000 });
+       fetch('/api/users/delete/'+user.iduser, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            }
+        )
     }
 
     const findIndexById = (id) => {
@@ -153,6 +207,13 @@ const Crud = () => {
         _user[`${name}`] = val;
 
         setUser(_user);
+    }
+
+    const onRolesChange = (e) => {
+        let _user = { ...user };
+        _user['idrole'] = e.value;
+        setUser(_user);
+        
     }
 
     const leftToolbarTemplate = () => {
@@ -215,7 +276,7 @@ const Crud = () => {
         return (
             <>
                 <span className="p-column-title">Número</span>
-                {rowData.role}
+                {rowData.idrole }
             </>
         );
     }
@@ -224,9 +285,26 @@ const Crud = () => {
         return (
             <>
                 <span className="p-column-title">Estado</span>
-                <span className={`provider-badge status-lowstock`}>{ rowData.userStatus === 0 ? 'Inactivo' : 'Activo' }</span>
+                <span className={`provider-badge status-lowstock`}>{ rowData.is_active === 0 ? 'Inactivo' : 'Activo' }</span>
             </>
         )
+    }
+
+    const generateUsername = (name, last_name, second_last_name) => {
+        for (let i = 0; i < 1; i++) {
+            let username = String(name).charAt(0) + String(last_name).charAt(0) + String(second_last_name).charAt(0) + Math.floor(Math.random() * 1000);
+            return username;
+        }
+    }
+
+    const generatePassword = () => {
+        //legth password 8
+        let password = '';
+        let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        for (let i = 0; i < 8; i++) {
+            password += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return password;
     }
 
     const actionBodyTemplate = (rowData) => {
@@ -298,18 +376,43 @@ const Crud = () => {
                         </div>
                         <div className="field">
                             <label htmlFor="last_name">Primer Apellido</label>
-                            <InputText id="last_name" value={user.last_name} onChange={(e) => onInputChange(e, 'last_name')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.last_name })} />
-                            {submitted && !user.last_name && <small className="p-invalid">El apellido es requerido.</small>}
+                            <InputText id="last_name" value={user.first_name} onChange={(e) => onInputChange(e, 'first_name')} required autoFocus className={classNames({ 'p-invalid': submitted && !user.first_name })} />
+                            {submitted && !user.first_name && <small className="p-invalid">El apellido es requerido.</small>}
                         </div>
                         <div className="field">
-                            <label htmlFor="second_last_name">Segundo Apellido</label>
-                            <InputText id="second_last_name" value={user.second_last_name} onChange={(e) => onInputChange(e, 'second_last_name')} />
-                        </div>
-                        <div className="field">
-                            <label htmlFor="number">Número</label>
-                            <InputText id="number" value={user.number} onChange={(e) => onInputChange(e, 'number')} />
+                            <label htmlFor="second_name">Segundo Apellido</label>
+                            <InputText id="second_name" value={user.second_name} onChange={(e) => onInputChange(e, 'second_name')} />
                         </div>
 
+
+                        <div className="field">
+                            <label htmlFor="number">Ci</label>
+                            <InputText id="number" value={user.number} onChange={(e) => onInputChange(e, 'number')} />
+                        </div>
+                        <div className="field">
+                            <label htmlFor="ci">Número</label>
+                            <InputText id="ci" value={user.ci} onChange={(e) => onInputChange(e, 'ci')} />
+                        </div>
+                        {roles.map((role) => (
+                            <div className='field-radiobutton col-6' >
+                            <RadioButton inputId={role.idRole} name="category" value={role.idRole} onChange={onRolesChange} checked={user.idrole === role.idRole} />
+                            <label htmlFor={role.idRole}>{role.name}</label>
+                        </div>
+                        ))}
+                        
+
+                        {/* <div className="field">
+                            <label className="mb-3">Rol de usuario</label>
+                            <div className="formgrid grid">
+                            {roles.map((item)=>(
+                                
+                                <h1>{item.name}</h1>
+                            )) }
+                            </div>
+                        </div> */}
+
+
+                       
                         {/* <div className="field">
                             <label htmlFor="role">Rol</label>
                             <Select id="role" options={user.role}></Select>

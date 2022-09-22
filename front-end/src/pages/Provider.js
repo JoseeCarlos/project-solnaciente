@@ -11,18 +11,18 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { ProviderService } from '../service/ProviderService';
+import { ConnectedOverlayScrollHandler } from 'primereact/utils';
 
 const Crud = () => {
     let emptyProvider = {
-        id: null,
+        idProvider: null,
         name: '',
-        image: null,
         description: '',
-        category: null,
-        price: 0,
-        quantity: 0,
-        rating: 0,
-        inventoryStatus: 'INSTOCK'
+        direction: '',
+        phone: '',
+        is_active: null,
+        created_at: '',
+        updated_at: '2022-01-01 00:00:00'
     };
 
     const [providers, setProviders] = useState(null);
@@ -37,8 +37,12 @@ const Crud = () => {
     const dt = useRef(null);
 
     useEffect(() => {
-        const providerService = new ProviderService();
-        providerService.getProviders().then(data => setProviders(data));
+        // const providerService = new ProviderService();
+        // providerService.getProviders().then(data => setProviders(data));
+        fetch('/api/providers/').then(res => res.json()).then(data => {
+            setProviders(data)
+            console.log(data.length)
+        });
     }, []);
 
     const formatCurrency = (value) => {
@@ -67,20 +71,47 @@ const Crud = () => {
     const saveProvider = () => {
         setSubmitted(true);
 
-        if (provider.name.trim() && provider.description.trim() && provider.direction.trim()) {
+        if (provider.name.trim()) {
             let _providers = [...providers];
             let _provider = { ...provider };
-            if (provider.id) {
-                const index = findIndexById(provider.id);
+            if (provider.idProvider) {
+                fetch('/api/providers/update/' + provider.idProvider, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(provider)
+                }).then(res => res.json()).then(data => {
+                    console.log(data)
+                    // const index = findIndexById(provider.idProvider);
 
-                _providers[index] = _provider;
-                toast.current.show({ severity: 'success', summary: '¡Éxito!', detail: 'Proveedor Actualizado', life: 3000 });
+                    // _providers[index] = _provider;
+                    // setProviders(_providers);
+                    setProviderDialog(false);
+                    setProvider(emptyProvider);
+                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Provider Updated', life: 3000 });
+                });
+                console.log('update')
             }
             else {
                 _provider.id = createId();
                 _provider.image = 'provider-placeholder.svg';
                 _providers.push(_provider);
                 toast.current.show({ severity: 'success', summary: '¡Éxito!', detail: 'Proveedor Creado', life: 3000 });
+                fetch('/api/providers/add', {
+                    method: 'POST',
+                    body: JSON.stringify(provider),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                }).then(res => res.json()).then(data => {
+                    console.log(data)
+                    toast.current.show({ severity: 'success', summary: '¡Éxito!', detail: 'Proveedor Creado', life: 3000 });
+                    setProviderDialog(false);
+                    setProviders(providers => [...providers, data]);
+                }).catch(err => console.error(err));
+                console.log(_provider)
             }
 
             setProviders(_providers);
@@ -100,11 +131,21 @@ const Crud = () => {
     }
 
     const deleteProvider = () => {
-        let _providers = providers.filter(val => val.id !== provider.id);
-        setProviders(_providers);
-        setDeleteProviderDialog(false);
-        setProvider(emptyProvider);
-        toast.current.show({ severity: 'success', summary: '¡Éxito!', detail: 'Proveedor Eliminado', life: 3000 });
+       fetch('/api/providers/delete/' + provider.idProvider, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(provider)
+        }).then(res => res.json()).then(data => {
+            console.log(data)
+            // const index = findIndexById(provider.id
+            // _providers[index] = _provider;
+            // setProviders(_providers);
+            setDeleteProviderDialog(false);
+            setProvider(emptyProvider);
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Provider Deleted', life: 3000 });
+        });
     }
 
     const findIndexById = (id) => {
@@ -234,7 +275,7 @@ const Crud = () => {
         return (
             <>
                 <span className="p-column-title">Añadido el:</span>
-                {rowData.createDate}
+                {rowData.created_at}
             </>
         );
     }
@@ -243,7 +284,7 @@ const Crud = () => {
         return (
             <>
                 <span className="p-column-title">Estado</span>
-                <span className={`provider-badge status-${rowData.providerStatus.toLowerCase()}`}>{rowData.providerStatus}</span>
+                <span className={`provider-badge status-lowstock`}>{ rowData.is_active === 0 ? 'Inactivo' : 'Activo' }</span>
             </>
         )
     }
@@ -299,7 +340,7 @@ const Crud = () => {
                         currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} proveedores"
                         globalFilter={globalFilter} emptyMessage="No providers found." header={header} responsiveLayout="scroll">
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
-                        <Column field="code" header="ID" sortable body={codeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem', display: 'none' }} style={{ display: 'none'}}></Column>
+                        {/* <Column field="code" header="ID" sortable body={codeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem', display: 'none' }} style={{ display: 'none'}}></Column> */}
                         <Column field="name" header="Nombre" sortable body={nameBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="description" header="Descripción" body={descriptionBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '8rem' }}></Column>
                         <Column field="direction" header="Dirección" body={directionBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '8rem' }}></Column>
