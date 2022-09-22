@@ -112,10 +112,20 @@ const Crud = () => {
             let _products = [...products];
             let _product = { ...product };
             if (product.idProduct) {
-                // const index = findIndexById(product.idProduct);
 
-                // _products[index] = _product;
-                // toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                fetch("/api/products/update/"+product.idProduct, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(product)
+                }).then((res)=>res.json().then((data)=> {
+                    console.log(data);
+                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                    setProductDialog(false);
+                    setProduct(emptyProduct);
+                    }
+                    ));
                 console.log("update");
             }
             else {
@@ -152,8 +162,21 @@ const Crud = () => {
     }
 
     const deleteProduct = () => {
-        let _products = products.filter(val => val.id !== product.id);
-        setProducts(_products);
+        fetch("/api/products/delete/"+product.idProduct, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(product)
+        }).then((res)=>res.json().then((data)=> {
+            console.log(data);}
+            ));
+       console.log(product.idProduct);
+        fetch("/api/products/").then((res)=>res.json().then((data)=> {
+            setProducts(data)
+            data.map((item)=>console.log(item.idProduct))
+            }
+            ));
         setDeleteProductDialog(false);
         setProduct(emptyProduct);
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });

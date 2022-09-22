@@ -58,7 +58,7 @@ class ProductModel():
             connection = get_connection()
             with connection.cursor() as cursor:
                 query = "UPDATE product SET is_active=0 WHERE idproduct=%s"
-                cursor.execute(query, (product.id,))
+                cursor.execute(query, (product.idProduct ,))
                 affected_rows = cursor.rowcount
                 connection.commit()
             connection.close()
@@ -72,7 +72,7 @@ class ProductModel():
             connection = get_connection()
             with connection.cursor() as cursor:
                 query = "UPDATE product SET name=%s, image=%s, barcode=%s, price_int=%s, price_out=%s, presentation=%s, unit=%s, stock=%s, idcategory=%s, updated_at=%s, idprovider=%s, iduser=%s, idbrand=%s WHERE idproduct=%s"
-                cursor.execute(query, (product.name, product.image, product.barcode, product.price_in, product.price_out, product.presentation, product.unit, product.stock, product.updated_at, product.id_provider, product.user_id, product.id_brand, product.id))
+                cursor.execute(query, (product.name, product.image, product.barcode, product.price_in, product.price_out, product.presentation, product.unit, product.stock,product.category_id , product.updated_at, product.id_provider, product.user_id, product.id_brand, int(product.idProduct)))
                 affected_rows = cursor.rowcount
                 connection.commit()
             connection.close()

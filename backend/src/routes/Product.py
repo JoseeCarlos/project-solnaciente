@@ -42,10 +42,10 @@ def add_product():
 @main.route('/delete/<id>', methods=['DELETE'])
 def delete_product(id):
     try:
-        product = Product(str(id))
+        product = Product(idProduct=str(id))
         affected_rows = ProductModel.delete_product(product)
         if affected_rows == 1:
-            return jsonify(product.id)
+            return jsonify(product.idProduct)
         else:
             return jsonify({'error': 'Product not deleted'}), 404
 
@@ -55,15 +55,13 @@ def delete_product(id):
 @main.route('/update/<id>', methods=['PUT'])
 def update_product(id):
     try:
-        name = request.json['name']
-        price = float(request.json['price'])
-        category = request.json['category']
-        product = Product(str(id), name, price, category)
+        
+        data = request.get_json()
+        product = Product(idProduct=id, name= data['name'], image=data['image'], barcode=data['barcode'], price_in=data['price_in'], price_out=data['price_out'], presentation=data['presentation'], unit=data['unit'], stock=data['stock'], category_id=data['category_id'], id_provider=data['id_provider'], user_id=data['user_id'], id_brand=data['id_brand'],updated_at=data['updated_at'])
         affected_rows = ProductModel.update_product(product)
         if affected_rows == 1:
-            return jsonify(product.id)
-        else:
-            return jsonify({'error': 'Product not updated'}), 404
+            return jsonify({'message': 'Product updated successfully'}), 201
+        return jsonify({'error': 'Product not updated'}), 500
 
     except Exception as ex:
         return jsonify({'error': str(ex)}), 500
