@@ -1,0 +1,13 @@
+{
+    "data": [
+        {"id": "1000","name": "Juan","last_name": "Mamani","second_last_name": "Quispe","ci": "8754345-T","number": "78563458","username": "PEPITO","userStatus": 0,"role": "Admin"},
+        {"id": "1001","name": "Juan","last_name": "Mamani","second_last_name": "Quispe","ci": "8754345-T","number": "78563458","username": "PEPITO","userStatus": 1,"role": "Employee"},
+        {"id": "1002","name": "Juan","last_name": "Mamani","second_last_name": "Quispe","ci": "8754345-T","number": "78563458","username": "PEPITO","userStatus": 0,"role": "Admin"},
+        {"id": "1003","name": "Juan","last_name": "Mamani","second_last_name": "Quispe","ci": "8754345-T","number": "78563458","username": "PEPITO","userStatus": 1,"role": "Employee"},
+        {"id": "1004","name": "Juan","last_name": "Mamani","second_last_name": "Quispe","ci": "8754345-T","number": "78563458","username": "PEPITO","userStatus": 1,"role": "Admin"},
+        {"id": "1005","name": "Juan","last_name": "Mamani","second_last_name": "Quispe","ci": "8754345-T","number": "78563458","username": "PEPITO","userStatus": 1,"role": "Admin"},
+        {"id": "1006","name": "Juan","last_name": "Mamani","second_last_name": "Quispe","ci": "8754345-T","number": "78563458","username": "PEPITO","userStatus": 0,"role": "Employee"},
+        {"id": "1007","name": "Juan","last_name": "Mamani","second_last_name": "Quispe","ci": "8754345-T","number": "78563458","username": "PEPITO","userStatus": 1,"role": "Admin"}
+    ]
+}
+    
