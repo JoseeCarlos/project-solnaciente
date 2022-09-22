@@ -9,10 +9,12 @@ class ProviderModel():
                 connection = get_connection()
                 providers = []
                 with connection.cursor() as cursor:
-                    cursor.execute("SELECT * FROM provider")
-                    for row in cursor.fetchall():
-                        providers.append(Provider(row[0],row[1],row[2],row[3],row[4],row[5]).to_JSON())
-                    
+                    query = "SELECT idprovider, name, description, direction,phone, is_active, created_at, updated_at FROM provider"
+                    cursor.execute(query)
+                    result = cursor.fetchall()
+                    for row in result:
+                        provider = Provider(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7])
+                        providers.append(provider.to_JSON())
                 connection.close()
                 return providers
             except Exception as ex:
@@ -40,8 +42,8 @@ class ProviderModel():
             try:
                 connection = get_connection()
                 with connection.cursor() as cursor:
-                    cursor.execute("INSERT INTO provider (name, description, updated_at) VALUES ( %s, %s, %s)", (provider.name, provider.description, provider.updated_at))
-                    affected_rows = cursor.rowcount
+                    query = "INSERT INTO provider (name, description, direction, phone, updated_at) VALUES (%s, %s, %s, %s, %s)"
+                    affected_rows = cursor.execute(query, (provider.name, provider.description, provider.direction, provider.phone, provider.updated_at))
                     connection.commit()
                 connection.close()
                 return affected_rows
@@ -50,11 +52,12 @@ class ProviderModel():
     
         @classmethod
         def delete_provider(self, provider):
+            #update
             try:
                 connection = get_connection()
                 with connection.cursor() as cursor:
-                    cursor.execute("DELETE FROM provider WHERE idprovider = %s", (provider.id,))
-                    affected_rows = cursor.rowcount
+                    query = "UPDATE provider SET is_active = 0 WHERE idprovider = %s"
+                    affected_rows = cursor.execute(query, (provider.idProvider,))
                     connection.commit()
                 connection.close()
                 return affected_rows
@@ -66,8 +69,8 @@ class ProviderModel():
             try:
                 connection = get_connection()
                 with connection.cursor() as cursor:
-                    cursor.execute("UPDATE provider SET name = %s, description = %s, updated_at = %s WHERE idprovider = %s", (provider.name, provider.description, provider.updated_at, provider.id))
-                    affected_rows = cursor.rowcount
+                    query = "UPDATE provider SET name = %s, description = %s, direction = %s, phone = %s, updated_at = %s WHERE idprovider = %s"
+                    affected_rows = cursor.execute(query, (provider.name, provider.description, provider.direction, provider.phone, provider.updated_at, provider.idProvider))
                     connection.commit()
                 connection.close()
                 return affected_rows
