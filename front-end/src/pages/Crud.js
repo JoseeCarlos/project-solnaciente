@@ -16,15 +16,23 @@ import { ProductService } from '../service/ProductService';
 
 const Crud = () => {
     let emptyProduct = {
-        id: null,
+        idProduct: null,
         name: '',
-        image: null,
-        description: '',
-        category: null,
-        price: 0,
-        quantity: 0,
-        rating: 0,
-        inventoryStatus: 'INSTOCK'
+        image: '',
+        barcode: '',
+        price_in: null,
+        price_out: null,
+        presentation: '',
+        unit: '',
+        stock: null,
+        category_id: null,
+        is_active: null,
+        created_at: null,
+        updated_at: '2022-01-01 00:00:00',
+        id_provider: null,
+        user_id: 2,
+        id_brand: null,
+
     };
 
     const [products, setProducts] = useState(null);
@@ -35,12 +43,43 @@ const Crud = () => {
     const [selectedProducts, setSelectedProducts] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
+    const [categories, setCategories] = useState([]);
     const toast = useRef(null);
     const dt = useRef(null);
+    const [providers, setProviders] = useState([]);
+    const [brands, setBrands] = useState([]);
 
     useEffect(() => {
-        const productService = new ProductService();
-        productService.getProducts().then(data => setProducts(data));
+        // const productService = new ProductService();
+        // productService.getProducts().then(data => setProducts(data));
+        
+        
+        
+        console.log(categories.length);
+        fetch("/api/products/").then((res)=>res.json().then((data)=> {
+            setProducts(data)
+            data.map((item)=>console.log(item.idProduct))
+          }
+          ));
+
+        fetch("/api/categories/").then((res)=>res.json().then((data)=> {
+            setCategories(data)
+            console.log(categories.length);
+          }
+            ));
+        
+        fetch("/api/providers/").then((res)=>res.json().then((data)=> {
+            setProviders(data)
+            console.log(providers.length);
+          }
+            ));
+
+        fetch("/api/brands/").then((res)=>res.json().then((data)=> {
+            setBrands(data)
+            console.log(brands.length);
+          }
+            ));
+        
     }, []);
 
     const formatCurrency = (value) => {
@@ -72,22 +111,43 @@ const Crud = () => {
         if (product.name.trim()) {
             let _products = [...products];
             let _product = { ...product };
-            if (product.id) {
-                const index = findIndexById(product.id);
+            if (product.idProduct) {
 
-                _products[index] = _product;
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                fetch("/api/products/update/"+product.idProduct, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(product)
+                }).then((res)=>res.json().then((data)=> {
+                    console.log(data);
+                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                    setProductDialog(false);
+                    setProduct(emptyProduct);
+                    }
+                    ));
+                console.log("update");
             }
             else {
-                _product.id = createId();
-                _product.image = 'product-placeholder.svg';
-                _products.push(_product);
+                // _product.idProduct = createId();
+                fetch("/api/products/add", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(product)
+                }).then((res)=>res.json().then((data)=> {
+                    console.log(data);}
+                    ));
+                console.log("create");
+                console.log(product);
                 toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
             }
 
             setProducts(_products);
             setProductDialog(false);
             setProduct(emptyProduct);
+
         }
     }
 
@@ -102,8 +162,21 @@ const Crud = () => {
     }
 
     const deleteProduct = () => {
-        let _products = products.filter(val => val.id !== product.id);
-        setProducts(_products);
+        fetch("/api/products/delete/"+product.idProduct, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(product)
+        }).then((res)=>res.json().then((data)=> {
+            console.log(data);}
+            ));
+       console.log(product.idProduct);
+        fetch("/api/products/").then((res)=>res.json().then((data)=> {
+            setProducts(data)
+            data.map((item)=>console.log(item.idProduct))
+            }
+            ));
         setDeleteProductDialog(false);
         setProduct(emptyProduct);
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
@@ -148,13 +221,28 @@ const Crud = () => {
 
     const onCategoryChange = (e) => {
         let _product = { ...product };
-        _product['category'] = e.value;
+        _product['category_id'] = e.value;
+        console.log(_product);
+        setProduct(_product);
+    }
+
+    const onProviderChange = (e) => {
+        let _product = { ...product };
+        _product['id_provider'] = e.value;
+        console.log(_product);
+        setProduct(_product);
+    }
+    const onBrandChange = (e) => {
+        let _product = { ...product };
+        _product['id_brand'] = e.value;
+        console.log(_product);
         setProduct(_product);
     }
 
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || '';
         let _product = { ...product };
+        console.log(val+" "+name);
         _product[`${name}`] = val;
 
         setProduct(_product);
@@ -163,6 +251,15 @@ const Crud = () => {
     const onInputNumberChange = (e, name) => {
         const val = e.value || 0;
         let _product = { ...product };
+        _product[`${name}`] = val;
+
+        setProduct(_product);
+    }
+
+    const onInputFileChange = (e, name) => {
+        const val = e.files[0];
+        let _product = { ...product };
+        console.log(val+" "+name);
         _product[`${name}`] = val;
 
         setProduct(_product);
@@ -205,6 +302,54 @@ const Crud = () => {
             </>
         );
     }
+    const barcodeBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Barcode</span>
+                {rowData.barcode}
+            </>
+        );
+    }
+    const imagepBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Image</span>
+                {rowData.image}
+            </>
+        );
+    }
+    const priceinBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Price in</span>
+                {rowData.price_in}
+            </>
+        );
+    }
+    const priceoutBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Price Out</span>
+                {rowData.price_out}
+            </>
+        );
+    }
+    const presentationBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Price Out</span>
+                {rowData.price_out}
+            </>
+        );
+    }
+    const categoryBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Category</span>
+                {rowData.category}
+            </>
+        );
+    }
 
     const imageBodyTemplate = (rowData) => {
         return (
@@ -224,11 +369,11 @@ const Crud = () => {
         );
     }
 
-    const categoryBodyTemplate = (rowData) => {
+    const categorysBodyTemplate = (rowData) => {
         return (
             <>
                 <span className="p-column-title">Categoría</span>
-                {rowData.category}
+                {rowData.category_id}
             </>
         );
     }
@@ -288,6 +433,16 @@ const Crud = () => {
             <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteSelectedProducts} />
         </>
     );
+    const myUploader = (event,name) => {
+
+        const val = event.files[0].name;
+        let _product = { ...product };
+        console.log(val+" "+name);
+        _product[`${name}`] = val;
+
+        setProduct(_product);
+
+    }
 
     return (
         <div className="grid crud-demo">
@@ -302,13 +457,20 @@ const Crud = () => {
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
                         globalFilter={globalFilter} emptyMessage="No products found." header={header} responsiveLayout="scroll">
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem'}}></Column>
-                        <Column field="code" header="Code" sortable body={codeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        {/* <Column field="code" header="Code" sortable body={codeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column> */}
                         <Column field="name" header="Name" sortable body={nameBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column header="Image" body={imageBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="barcode" header="Barcode" sortable body={barcodeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="image" header="Image" sortable body={imagepBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="Presentation" header="Presentation" sortable body={priceoutBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="Category" header="Category" sortable body={categorysBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="PriceInt" header="PriceInt" sortable body={priceinBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="PriceOut" header="PriceOut" sortable body={presentationBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+
+                        {/* <Column header="Image" body={imageBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="price" header="Price" body={priceBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '8rem' }}></Column>
                         <Column field="category" header="Category" sortable body={categoryBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column> */}
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
@@ -320,33 +482,97 @@ const Crud = () => {
                             {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
                         </div>
                         <div className="field">
-                            <label htmlFor="description">Descripción</label>
-                            <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                            <label htmlFor="image">Imagen</label>
+                            <FileUpload name="demo[]" url="./upload" customUpload uploadHandler={(e)=> myUploader(e,'image')} />
+                            {submitted && !product.image && <small className="p-invalid">Image is required.</small>}
                         </div>
+                        <div className="field">
+                            <label htmlFor="barcode">Codigo de Barras</label>
+                            <InputText id="barcode" value={product.barcode} onChange={(e) => onInputChange(e, 'barcode')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.barcode })} />
+                            {submitted && !product.barcode && <small className="p-invalid">Barcode is required.</small>}
+                        </div>
+                       
+                        <div className="formgrid grid">
+                            <div className="field col">
+                                <label htmlFor="price_in">Precio de compra</label>
+                                <InputNumber id="price_in" value={product.price_in} onChange={(e) => onInputNumberChange(e, 'price_in')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.price_in })} />
+                                {/* {submitted && !product.price_in && <small className="p-invalid">Price in is required.</small>} */}
+                            </div>
+                            <div className="field col">
+                                <label htmlFor="priceout">Precio de Venta</label>
+                                <InputNumber id="priceout" value={product.price_out} onChange={(e) => onInputNumberChange(e, 'price_out')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.price_out })} />
+                                {/* {submitted && !product.price_out && <small className="p-invalid">Price out is required.</small>} */}
+                            </div>
+                        </div>
+                        <div className="formgrid grid">
+                            <div className="field col">
+                                <label htmlFor="presentation">Presentacion</label>
+                                <InputText id="presentation" value={product.presentation} onChange={(e) => onInputChange(e, 'presentation')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.presentation })} />
+                                {submitted && !product.presentation && <small className="p-invalid">Presentation is required.</small>}
+                            </div>
+                            <div className="field col">
+                                <label htmlFor="unit">Unidad de medida</label>
+                                <InputText id="unit" value={product.unit} onChange={(e) => onInputChange(e, 'unit')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.unit })} />
+                                {submitted && !product.unit && <small className="p-invalid">unit is required.</small>}
+                            </div>
+                        </div>
+                        {/* <div className="field">
+                            <label htmlFor="barcode">Presentacion</label>
+                            <InputText id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                        </div>
+                        <div className="field">
+                            <label htmlFor="barcode">Unidad de medida</label>
+                            <InputText id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                        </div> */}
+                        <div className="field">
+                                <label htmlFor="stock">stock</label>
+                                <InputNumber id="stock" value={product.stock} onChange={(e) => onInputNumberChange(e, 'stock')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.stock })} />
+                                {submitted && !product.stock && <small className="p-invalid">Stock is required.</small>}
+                        </div>
+                       
 
                         <div className="field">
                             <label className="mb-3">Categoria</label>
                             <div className="formgrid grid">
+                           
+                            { categories.map((item)=>(
+                                
                                 <div className="field-radiobutton col-6">
-                                    <RadioButton inputId="category1" name="category" value="Accessories" onChange={onCategoryChange} checked={product.category === 'Accessories'} />
-                                    <label htmlFor="category1">Accessories</label>
+                                    <RadioButton inputId={item.id} name="category" value={item.id} onChange={onCategoryChange} checked={product.category_id === item.id} />
+                                    <label htmlFor={item.id}>{item.name}</label>
                                 </div>
+                            )) }
+                            </div>
+                        </div>
+                        <div className="field">
+                            <label className="mb-3">Proveedor</label>
+                            <div className="formgrid grid">
+                           
+                            { providers.map((item)=>(
+                                
                                 <div className="field-radiobutton col-6">
-                                    <RadioButton inputId="category2" name="category" value="Clothing" onChange={onCategoryChange} checked={product.category === 'Clothing'} />
-                                    <label htmlFor="category2">Clothing</label>
+                                    <RadioButton inputId={item.idProvider} name="category" value={item.idProvider} onChange={onProviderChange} checked={product.id_provider === item.idProvider} />
+                                    <label htmlFor={item.idProvider}>{item.name}</label>
                                 </div>
-                                <div className="field-radiobutton col-6">
-                                    <RadioButton inputId="category3" name="category" value="Electronics" onChange={onCategoryChange} checked={product.category === 'Electronics'} />
-                                    <label htmlFor="category3">Electronics</label>
-                                </div>
-                                <div className="field-radiobutton col-6">
-                                    <RadioButton inputId="category4" name="category" value="Fitness" onChange={onCategoryChange} checked={product.category === 'Fitness'} />
-                                    <label htmlFor="category4">Fitness</label>
-                                </div>
+                            )) }
                             </div>
                         </div>
 
-                        <div className="formgrid grid">
+                        <div className="field">
+                            <label className="mb-3">Marca</label>
+                            <div className="formgrid grid">
+                           
+                            { brands.map((item)=>(
+                                
+                                <div className="field-radiobutton col-6">
+                                <RadioButton inputId={item.idbrand} name="category" value={item.idbrand} onChange={onBrandChange} checked={product.id_brand === item.idbrand} />
+                                <label htmlFor={item.idbrand}>{item.name}</label>
+                            </div>
+                            )) }
+                            </div>
+                        </div>
+
+                        {/* <div className="formgrid grid">
                             <div className="field col">
                                 <label htmlFor="price">Price</label>
                                 <InputNumber id="price" value={product.price} onValueChange={(e) => onInputNumberChange(e, 'price')} mode="currency" currency="USD" locale="en-US" />
@@ -355,7 +581,7 @@ const Crud = () => {
                                 <label htmlFor="quantity">Quantity</label>
                                 <InputNumber id="quantity" value={product.quantity} onValueChange={(e) => onInputNumberChange(e, 'quantity')} integeronly />
                             </div>
-                        </div>
+                        </div> */}
                     </Dialog>
 
                     <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>

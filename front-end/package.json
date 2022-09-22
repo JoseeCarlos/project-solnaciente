@@ -3,6 +3,7 @@
     "version": "7.0.3-SNAPSHOT",
     "homepage": ".",
     "private": false,
+    "proxy": "http://localhost:5000",
     "repository": {
         "type": "git",
         "url": "https://github.com/primefaces/sakai-react.git"
