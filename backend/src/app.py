@@ -2,7 +2,7 @@ from re import A
 from unicodedata import name
 from flask import Flask
 from config import config
-from routes import Category, Product,Provider,Role, User,Brand
+from routes import Category, Product,Provider,Role, User,Brand,Purchase
 
 app = Flask(__name__)
 
@@ -19,6 +19,7 @@ if __name__ == '__main__':
     app.register_blueprint(Role.main, name="roles", url_prefix='/api/roles')
     app.register_blueprint(User.main, name="users", url_prefix='/api/users')
     app.register_blueprint(Brand.main, name="brands", url_prefix='/api/brands')
+    app.register_blueprint(Purchase.main, name="purchases", url_prefix='/api/purchases')
 
     app.register_error_handler(404, page_not_found)
     app.run(host='0.0.0.0', debug=True,port=5000)
