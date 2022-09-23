@@ -35,6 +35,8 @@ import TimelineDemo from './pages/TimelineDemo';
 import Category from './pages/Category';
 import Provider from './pages/Provider';
 import User from './pages/User';
+import Sale from './pages/Sale';
+import Purchase from './pages/Purchase';
 
 import PrimeReact from 'primereact/api';
 import { Tooltip } from 'primereact/tooltip';
@@ -186,7 +188,7 @@ const App = () => {
             label: 'Compras', icon: 'pi pi-fw pi-clone',
             items: [
                 { label: 'Proveedores', icon: 'pi pi-fw pi-user-edit', to: '/provider' },
-                { label: 'Realizar compra', icon: 'pi pi-fw pi-user-edit', to: '/category' },
+                { label: 'Realizar compra', icon: 'pi pi-fw pi-user-edit', to: '/purchase' },
                 { label: 'historial de precios', icon: 'pi pi-fw pi-user-edit', to: '/category' },
 
             ]
@@ -195,7 +197,7 @@ const App = () => {
             label: 'Ventas', icon: 'pi pi-fw pi-clone',
             items: [
                 { label: 'Clientes', icon: 'pi pi-fw pi-user-edit', to: '/category' },
-                { label: 'Realizar venta', icon: 'pi pi-fw pi-user-edit', to: '/category' },
+                { label: 'Realizar venta', icon: 'pi pi-fw pi-user-edit', to: '/sale' },
                 { label: 'Ventas del dia', icon: 'pi pi-fw pi-user-edit', to: '/category' },
                 { label: 'Ventas por rango de fecha', icon: 'pi pi-fw pi-user-edit', to: '/category' },
                 { label: 'Ventas por mes', icon: 'pi pi-fw pi-user-edit', to: '/category' },
@@ -270,6 +272,8 @@ const App = () => {
                     <Route path="/category" component={Category} />
                     <Route path="/provider" component={Provider} />
                     <Route path="/user" component={User} />
+                    <Route path="/sale" component={Sale} />
+                    <Route path="/purchase" component={Purchase} />
                 </div>
 
                 <AppFooter layoutColorMode={layoutColorMode} />
