@@ -12,34 +12,32 @@ import { RadioButton } from 'primereact/radiobutton';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { ProductService } from '../service/ProductService';
+import { CategoryService } from '../service/CategoryService';
 
 const Crud = () => {
-    let emptyProduct = {
+    let emptyCategory = {
         id: null,
         image: null,
+        name: '',
         description: '',
         category: null,
-        price: 0,
-        quantity: 0,
-        rating: 0,
-        inventoryStatus: 'INSTOCK'
+        is_active: 0
     };
 
-    const [products, setProducts] = useState(null);
-    const [productDialog, setProductDialog] = useState(false);
-    const [deleteProductDialog, setDeleteProductDialog] = useState(false);
-    const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
-    const [product, setProduct] = useState(emptyProduct);
-    const [selectedProducts, setSelectedProducts] = useState(null);
+    const [categories, setCategories] = useState(null);
+    const [categoryDialog, setCategoryDialog] = useState(false);
+    const [deleteCategoryDialog, setDeleteCategoryDialog] = useState(false);
+    const [deleteCategoriesDialog, setDeleteCategoriesDialog] = useState(false);
+    const [category, setCategory] = useState(emptyCategory);
+    const [selectedCategories, setSelectedCategories] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
 
     useEffect(() => {
-        const productService = new ProductService();
-        productService.getProducts().then(data => setProducts(data));
+        const categoriesService = new CategoryService();
+        categoriesService.getCategories().then(data => setCategories(data));
     }, []);
 
     const formatCurrency = (value) => {
@@ -47,71 +45,71 @@ const Crud = () => {
     }
 
     const openNew = () => {
-        setProduct(emptyProduct);
+        setCategory(emptyCategory);
         setSubmitted(false);
-        setProductDialog(true);
+        setCategoryDialog(true);
     }
 
     const hideDialog = () => {
         setSubmitted(false);
-        setProductDialog(false);
+        setCategoryDialog(false);
     }
 
-    const hideDeleteProductDialog = () => {
-        setDeleteProductDialog(false);
+    const hideDeleteCategoryDialog = () => {
+        setDeleteCategoryDialog(false);
     }
 
-    const hideDeleteProductsDialog = () => {
-        setDeleteProductsDialog(false);
+    const hideDeleteCategoriesDialog = () => {
+        setDeleteCategoriesDialog(false);
     }
 
-    const saveProduct = () => {
+    const saveCategory = () => {
         setSubmitted(true);
 
-        if (product.name.trim()) {
-            let _products = [...products];
-            let _product = { ...product };
-            if (product.id) {
-                const index = findIndexById(product.id);
+        if (category.name.trim()) {
+            let _categories = [...categories];
+            let _category = { ...category };
+            if (category.id) {
+                const index = findIndexById(category.id);
 
-                _products[index] = _product;
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                _categories[index] = _category;
+                toast.current.show({ severity: 'success', summary: '¡Éxito!', detail: 'Categoria Actualizada', life: 3000 });
             }
             else {
-                _product.id = createId();
-                _product.image = 'product-placeholder.svg';
-                _products.push(_product);
-                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+                _category.id = createId();
+                _category.image = 'product-placeholder.svg';
+                _categories.push(_category);
+                toast.current.show({ severity: 'success', summary: '¡Éxito!', detail: 'Categoria Creada', life: 3000 });
             }
 
-            setProducts(_products);
-            setProductDialog(false);
-            setProduct(emptyProduct);
+            setCategories(_categories);
+            setCategoryDialog(false);
+            setCategory(emptyCategory);
         }
     }
 
-    const editProduct = (product) => {
-        setProduct({ ...product });
-        setProductDialog(true);
+    const editCategory = (category) => {
+        setCategory({ ...category });
+        setCategoryDialog(true);
     }
 
-    const confirmDeleteProduct = (product) => {
-        setProduct(product);
-        setDeleteProductDialog(true);
+    const confirmDeleteCategory = (category) => {
+        setCategory(category);
+        setDeleteCategoryDialog(true);
     }
 
-    const deleteProduct = () => {
-        let _products = products.filter(val => val.id !== product.id);
-        setProducts(_products);
-        setDeleteProductDialog(false);
-        setProduct(emptyProduct);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+    const deleteCategory = () => {
+        let _categories = categories.filter(val => val.id !== category.id);
+        setCategories(_categories);
+        setDeleteCategoryDialog(false);
+        setCategory(emptyCategory);
+        toast.current.show({ severity: 'success', summary: '¡Éxito!', detail: 'Categoria Eliminada', life: 3000 });
     }
 
     const findIndexById = (id) => {
         let index = -1;
-        for (let i = 0; i < products.length; i++) {
-            if (products[i].id === id) {
+        for (let i = 0; i < categories.length; i++) {
+            if (categories[i].id === id) {
                 index = i;
                 break;
             }
@@ -134,37 +132,37 @@ const Crud = () => {
     }
 
     const confirmDeleteSelected = () => {
-        setDeleteProductsDialog(true);
+        setDeleteCategoriesDialog(true);
     }
 
-    const deleteSelectedProducts = () => {
-        let _products = products.filter(val => !selectedProducts.includes(val));
-        setProducts(_products);
-        setDeleteProductsDialog(false);
-        setSelectedProducts(null);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
+    const deleteSelectedCategories = () => {
+        let _categories = categories.filter(val => !selectedCategories.includes(val));
+        setCategories(_categories);
+        setDeleteCategoriesDialog(false);
+        setSelectedCategories(null);
+        toast.current.show({ severity: 'success', summary: '¡Éxito!', detail: 'Categorias Eliminadas', life: 3000 });
     }
 
     const onCategoryChange = (e) => {
-        let _product = { ...product };
-        _product['category'] = e.value;
-        setProduct(_product);
+        let _category = { ...category };
+        _category['category'] = e.value;
+        setCategory(_category);
     }
 
     const onInputChange = (e, name) => {
         const val = (e.target && e.target.value) || '';
-        let _product = { ...product };
-        _product[`${name}`] = val;
+        let _category = { ...category };
+        _category[`${name}`] = val;
 
-        setProduct(_product);
+        setCategory(_category);
     }
 
     const onInputNumberChange = (e, name) => {
         const val = e.value || 0;
-        let _product = { ...product };
-        _product[`${name}`] = val;
+        let _category = { ...category };
+        _category[`${name}`] = val;
 
-        setProduct(_product);
+        setCategory(_category);
     }
 
     const leftToolbarTemplate = () => {
@@ -172,7 +170,7 @@ const Crud = () => {
             <React.Fragment>
                 <div className="my-2">
                     <Button label="Nuevo" icon="pi pi-plus" className="p-button-success mr-2" onClick={openNew} />
-                    <Button label="Borrar" icon="pi pi-trash" className="p-button-danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
+                    <Button label="Borrar" icon="pi pi-trash" className="p-button-danger" onClick={confirmDeleteSelected} disabled={!selectedCategories || !selectedCategories.length} />
                 </div>
             </React.Fragment>
         )
@@ -186,10 +184,10 @@ const Crud = () => {
         )
     }
 
-    const codeBodyTemplate = (rowData) => {
+    const idBodyTemplate = (rowData) => {
         return (
             <>
-                {rowData.code}
+                {rowData.id}
             </>
         );
     }
@@ -197,7 +195,7 @@ const Crud = () => {
     const nameBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Nombre</span>
+                <span className="p-column-title">Categoria</span>
                 {rowData.name}
             </>
         );
@@ -212,29 +210,11 @@ const Crud = () => {
         )
     }
 
-    const priceBodyTemplate = (rowData) => {
+    const descriptionBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Pricio</span>
-                {formatCurrency(rowData.price)}
-            </>
-        );
-    }
-
-    const categoryBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Categoría</span>
-                {rowData.category}
-            </>
-        );
-    }
-
-    const ratingBodyTemplate = (rowData) => {
-        return (
-            <>
-                <span className="p-column-title">Calificación</span>
-                <Rating value={rowData.rating} readonly cancel={false} />
+                <span className="p-column-title">Descripción</span>
+                {rowData.description}
             </>
         );
     }
@@ -243,7 +223,7 @@ const Crud = () => {
         return (
             <>
                 <span className="p-column-title">Estado</span>
-                <span className={`product-badge status-${rowData.inventoryStatus.toLowerCase()}`}>{rowData.inventoryStatus}</span>
+                <span className={`provider-badge status-lowstock`}>{ rowData.is_active === 0 ? 'Inactivo' : 'Activo' }</span>
             </>
         )
     }
@@ -251,15 +231,15 @@ const Crud = () => {
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="actions">
-                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editProduct(rowData)} />
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteProduct(rowData)} />
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editCategory(rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteCategory(rowData)} />
             </div>
         );
     }
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">Busqueda de Productos</h5>
+            <h5 className="m-0">Busqueda de Categoryos</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
@@ -267,22 +247,22 @@ const Crud = () => {
         </div>
     );
 
-    const productDialogFooter = (
+    const categoryDialogFooter = (
         <>
-            <Button label="CancelaR" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
-            <Button label="Guardar" icon="pi pi-check" className="p-button-text" onClick={saveProduct} />
+            <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+            <Button label="Guardar" icon="pi pi-check" className="p-button-text" onClick={saveCategory} />
         </>
     );
-    const deleteProductDialogFooter = (
+    const deleteCategoryDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductDialog} />
-            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteProduct} />
+            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteCategoryDialog} />
+            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteCategory} />
         </>
     );
-    const deleteProductsDialogFooter = (
+    const deleteCategoriesDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteProductsDialog} />
-            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteSelectedProducts} />
+            <Button label="No" icon="pi pi-times" className="p-button-text" onClick={hideDeleteCategoriesDialog} />
+            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={deleteSelectedCategories} />
         </>
     );
 
@@ -293,46 +273,45 @@ const Crud = () => {
                     <Toast ref={toast} />
                     <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
-                    <DataTable ref={dt} value={products} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
+                    <DataTable ref={dt} value={categories} selection={selectedCategories} onSelectionChange={(e) => setSelectedCategories(e.value)}
                         dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                        globalFilter={globalFilter} emptyMessage="No products found." header={header} responsiveLayout="scroll">
+                        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Categorias"
+                        globalFilter={globalFilter} emptyMessage="No Categories found." header={header} responsiveLayout="scroll">
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem'}}></Column>
-                        <Column field="code" header="Code" sortable body={codeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="id" header="ID" sortable body={idBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }} style={{ display: "none" }}></Column>
                         <Column field="name" header="Name" sortable body={nameBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column header="Image" body={imageBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="price" header="Price" body={priceBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '8rem' }}></Column>
-                        <Column field="category" header="Category" sortable body={categoryBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="description" header="Descrición" body={descriptionBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '8rem' }}></Column>
+                        <Column field="is_active" header="Estado" body={statusBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={productDialog} style={{ width: '450px' }} header="Detalles del Producto" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
-                        {product.image && <img src={`assets/demo/images/product/${product.image}`} alt={product.image} width="150" className="mt-0 mx-auto mb-5 block shadow-2" />}
+                    <Dialog visible={categoryDialog} style={{ width: '450px' }} header="Detalles de la Categoria" modal className="p-fluid" footer={categoryDialogFooter} onHide={hideDialog}>
+                        {category.image && <img src={`assets/demo/images/product/${category.image}`} alt={category.image} width="150" className="mt-0 mx-auto mb-5 block shadow-2" />}
                         <div className="field">
                             <label htmlFor="name">Nombre</label>
-                            <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
-                            {submitted && !product.name && <small className="p-invalid">Name is required.</small>}
+                            <InputText id="name" value={category.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !category.name })} />
+                            {submitted && !category.name && <small className="p-invalid">El nombre es requerido.</small>}
                         </div>
                         <div className="field">
                             <label htmlFor="description">Descripción</label>
-                            <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+                            <InputTextarea id="description" value={category.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} autoFocus className={classNames({ 'p-invalid': submitted && !category.description })} />
+                            {submitted && !category.description && <small className="p-invalid">La descrición es requerida.</small>}
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
+                    <Dialog visible={deleteCategoryDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deleteCategoryDialogFooter} onHide={hideDeleteCategoryDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {product && <span>Are you sure you want to delete <b>{product.name}</b>?</span>}
+                            {category && <span>¿Está seguro que desea eliminar la categoria <b>{category.name}</b>?</span>}
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
+                    <Dialog visible={deleteCategoriesDialog} style={{ width: '450px' }} header="Confirmar" modal footer={deleteCategoriesDialogFooter} onHide={hideDeleteCategoriesDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {product && <span>Are you sure you want to delete the selected products?</span>}
+                            {category && <span>¿Está seguro que desea eliminar las categorias?</span>}
                         </div>
                     </Dialog>
                 </div>
