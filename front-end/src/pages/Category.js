@@ -16,12 +16,14 @@ import { CategoryService } from '../service/CategoryService';
 
 const Crud = () => {
     let emptyCategory = {
-        id: null,
-        image: null,
+        idcategory: null,
+        image: null, 
         name: '',
         description: '',
-        category: null,
-        is_active: 0
+        is_active: '',
+        created_at: '',
+        updated_at: '',
+
     };
 
     const [categories, setCategories] = useState(null);
@@ -36,8 +38,11 @@ const Crud = () => {
     const dt = useRef(null);
 
     useEffect(() => {
-        const categoriesService = new CategoryService();
-        categoriesService.getCategories().then(data => setCategories(data));
+        // const categoriesService = new CategoryService();
+        // categoriesService.getCategories().then(data => setCategories(data));
+        fetch('api/categories/')
+            .then(response => response.json())
+            .then(data => setCategories(data));
     }, []);
 
     const formatCurrency = (value) => {

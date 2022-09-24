@@ -73,6 +73,8 @@ const FormLayoutDemo = () => {
     }
 
     const [purchase, setPurchase] = useState(emptyPurchase);
+    const [purchases, setPurchases] = useState([]);
+
     
 
 
@@ -91,6 +93,14 @@ const FormLayoutDemo = () => {
             .then(res => res.json())
             .then(data => {
                 setProviders(data);
+                console.log(data)
+            }
+            );
+        
+        fetch('/api/purchases/')
+            .then(res => res.json())
+            .then(data => {
+                setPurchases(data);
                 console.log(data)
             }
             );
@@ -161,6 +171,16 @@ const FormLayoutDemo = () => {
             </>
         );
     }
+
+    const purchaseDateTemplate = (rowData) => {
+        return (
+            <>
+                <span className="p-column-title">Fecha de compra</span>
+                {rowData.purchase_date}
+            </>
+        );
+    }
+
 
     const imageBodyTemplate = (rowData) => {
         return (
@@ -239,6 +259,10 @@ const FormLayoutDemo = () => {
                 console.log(data)
             }
             );
+        
+        setPurchase(emptyPurchase);
+        setSelectedProducts([]);
+
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Purchase added', life: 3000 });
 
     }
@@ -246,6 +270,7 @@ const FormLayoutDemo = () => {
     const onCuantityChange = (e) => {
         let _purchase = { ...purchase };
         _purchase['quantity'] = e.value;
+        _purchase['total_quantity'] = e.value;
         console.log(_purchase)
         console.log(purchase)
         let total = _purchase.quantity * _purchase.price;
@@ -307,7 +332,7 @@ const FormLayoutDemo = () => {
                     </div>
                     <div className="field">
                             <label htmlFor="barcode">Cantidad</label>
-                            <InputNumber id="barcode" required autoFocus onChange={(e) => onCuantityChange(e)} className={classNames({ 'p-invalid': submitted && purchase.quantity })} />
+                            <InputNumber id="barcode" required autoFocus value={purchase.quantity } onChange={(e) => onCuantityChange(e)} className={classNames({ 'p-invalid': submitted && purchase.quantity })} />
                             {submitted && <small className="p-invalid">Barcode is required.</small>}
                     </div>
                     <div className="field">
@@ -320,20 +345,21 @@ const FormLayoutDemo = () => {
             <div className="col-12">
                 <div className="card">
                 <h5>Compras registradas</h5>
-                    <DataTable value={products} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
+                    <DataTable value={purchases} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
                         dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                        globalFilter={globalFilter} emptyMessage="No products found." responsiveLayout="scroll">
+                        globalFilter={globalFilter} emptyMessage="No products found." responsiveLayout="scroll" filter >
                         <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
-                        <Column field="code" header="Code" sortable body={codeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="purchase_date" header="Fecha de compra" sortable body={purchaseDateTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        {/* <Column field="code" header="Code" sortable body={codeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="name" header="Proveedor" sortable body={nameBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="name" header="Producto" sortable body={nameBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column header="Image" body={imageBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="price" header="Cantidad" body={priceBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '8rem' }}></Column>
                         <Column field="category" header="Precio de compra" sortable body={categoryBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="inventoryStatus" header="Precio de venta" body={statusBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="inventoryStatus" header="Total" body={statusBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="inventoryStatus" header="Total" body={statusBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column> */}
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
                 </div>
