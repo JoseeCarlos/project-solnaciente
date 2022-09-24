@@ -55,7 +55,7 @@ const FormLayoutDemo = () => {
     const [productlist, setProductlist] = useState(null);
     const [providers, setProviders] = useState(null);
     const toast = useRef(null);
-    
+
 
     let emptyPurchase = {
         idpurchase : null,
@@ -73,22 +73,22 @@ const FormLayoutDemo = () => {
     }
 
     const [purchase, setPurchase] = useState(emptyPurchase);
-    const [purchases, setPurchases] = useState([]);
-
-    
+    const [purchases, setPurchases] = useState(null);
 
 
-    
+
+
+
 
     useEffect(() => {
         fetch('/api/products/')
             .then(res => res.json())
-            .then(data => { 
+            .then(data => {
                 setProductlist(data);
                 console.log(data)
                 console.log(listboxValues)
             });
-        
+
         fetch('/api/providers/')
             .then(res => res.json())
             .then(data => {
@@ -96,7 +96,7 @@ const FormLayoutDemo = () => {
                 console.log(data)
             }
             );
-        
+
         fetch('/api/purchases/')
             .then(res => res.json())
             .then(data => {
@@ -229,6 +229,7 @@ const FormLayoutDemo = () => {
 
     const setSelectionProducts = (e) => {
         setSelectedProducts(e.value);
+        console.log(e.value)
         let _purchase = { ...purchase };
         _purchase['idproduct'] = e.value.idProduct;
         _purchase['price'] = e.value.price_in;
@@ -259,9 +260,9 @@ const FormLayoutDemo = () => {
                 console.log(data)
             }
             );
-        
+
         setPurchase(emptyPurchase);
-        setSelectedProducts([]);
+        // setSelectedProducts([]);
 
         toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Purchase added', life: 3000 });
 
@@ -285,7 +286,14 @@ const FormLayoutDemo = () => {
                 <div className="card p-fluid">
                     <h5>Buscar Producto</h5>
                     <div className="field">
-                        <ListBox value={productlist} options={productlist}  onChange={setSelectionProducts} optionLabel="name" filter />
+                    <ListBox value={productlist} options={productlist} onChange={(e)=>{
+                        setSelectedProducts(e.value);
+                        console.log(e.value)
+                        let _purchase = { ...purchase };
+                        _purchase['idproduct'] = e.value.idProduct;
+                        _purchase['price'] = e.value.price_in;
+                        setPurchase(_purchase);
+                    }}   optionLabel="name" filter />
 
                     </div>
                 </div>
@@ -299,7 +307,7 @@ const FormLayoutDemo = () => {
                         <div className="flex justify-content-center">
                                 <Image src="assets/demo/images/galleria/galleria11.jpg" alt="galleria" width={250} preview style={{ "margin-bottom": "10px" }}/>
                             </div>
-                            
+
                         </div>
                         <div className="field col">
                             <label htmlFor="name">Nombre: </label>
@@ -307,8 +315,8 @@ const FormLayoutDemo = () => {
                             <label htmlFor="name">{ selectedProducts.name ? " "+selectedProducts.name : ' Seleccione un producto' }</label>
                         </div>
                     </div>
-                    
-                    
+
+
                     <div className="formgrid grid">
                         <div className="field col">
                             <label htmlFor="name">Proveedor</label>
@@ -345,23 +353,14 @@ const FormLayoutDemo = () => {
             <div className="col-12">
                 <div className="card">
                 <h5>Compras registradas</h5>
-                    <DataTable value={purchases} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
-                        dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} className="datatable-responsive"
-                        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
-                        globalFilter={globalFilter} emptyMessage="No products found." responsiveLayout="scroll" filter >
-                        <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
-                        <Column field="purchase_date" header="Fecha de compra" sortable body={purchaseDateTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        {/* <Column field="code" header="Code" sortable body={codeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="name" header="Proveedor" sortable body={nameBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="name" header="Producto" sortable body={nameBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column header="Image" body={imageBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="price" header="Cantidad" body={priceBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '8rem' }}></Column>
-                        <Column field="category" header="Precio de compra" sortable body={categoryBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="inventoryStatus" header="Precio de venta" body={statusBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="inventoryStatus" header="Total" body={statusBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column> */}
-                        <Column body={actionBodyTemplate}></Column>
+                    <DataTable value={purchases} paginator rows={10} rowsPerPageOptions={[5, 10, 20]} emptyMessage="No hay compras registradas">
+                        <Column field="purchase_date" header="ID" sortable></Column>
+                        <Column field="total_quantity" header="Producto" sortable></Column>
+                        <Column field="total_price" header="Cantidad" sortable></Column>
+                        <Column field="is_active" header="Precio" sortable></Column>
+                        
                     </DataTable>
+
                 </div>
             </div>
         </div >

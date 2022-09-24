@@ -1,7 +1,7 @@
 class Category():
 
-    def __init__(self,id=None,image=None,name=None,description=None,is_active=None,created_at=None,updated_at=None):
-        self.id = id
+    def __init__(self,idcategory=None,image=None,name=None,description=None,is_active=None,created_at=None,updated_at=None):
+        self.idcategory = idcategory
         self.image = image
         self.name = name
         self.description = description
@@ -12,7 +12,7 @@ class Category():
     
     def to_JSON(self):
         return {
-            'id': self.id,
+            'idcategory': self.idcategory,
             'image': self.image,
             'name': self.name,
             'description': self.description,

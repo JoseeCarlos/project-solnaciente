@@ -17,12 +17,12 @@ import { CategoryService } from '../service/CategoryService';
 const Crud = () => {
     let emptyCategory = {
         idcategory: null,
-        image: null, 
+        image: 'defaul.jpg', 
         name: '',
         description: '',
         is_active: '',
         created_at: '',
-        updated_at: '',
+        updated_at: '2021-01-01 00:00:00',
 
     };
 
@@ -72,19 +72,49 @@ const Crud = () => {
         setSubmitted(true);
 
         if (category.name.trim()) {
+            
             let _categories = [...categories];
             let _category = { ...category };
-            if (category.id) {
-                const index = findIndexById(category.id);
+            if (category.idcategory) {
+                // const index = findIndexById(category.idcategory);
 
-                _categories[index] = _category;
-                toast.current.show({ severity: 'success', summary: '¡Éxito!', detail: 'Categoria Actualizada', life: 3000 });
+                // _categories[index] = _category;
+                // toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Category Updated', life: 3000 });
+                console.log('update');
+                console.log(category);
+                fetch('api/categories/update/' + category.idcategory, {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(category)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Category Updated', life: 3000 });
+                    });
             }
             else {
-                _category.id = createId();
-                _category.image = 'product-placeholder.svg';
-                _categories.push(_category);
-                toast.current.show({ severity: 'success', summary: '¡Éxito!', detail: 'Categoria Creada', life: 3000 });
+                // _category.idcategory = createId();
+                // _categories.push(_category);
+                // toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Category Created', life: 3000 });
+                console.log('create');
+                fetch('api/categories/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(category)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                }
+                );
+
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Category Created', life: 3000 });
             }
 
             setCategories(_categories);
@@ -104,11 +134,25 @@ const Crud = () => {
     }
 
     const deleteCategory = () => {
-        let _categories = categories.filter(val => val.id !== category.id);
-        setCategories(_categories);
-        setDeleteCategoryDialog(false);
-        setCategory(emptyCategory);
-        toast.current.show({ severity: 'success', summary: '¡Éxito!', detail: 'Categoria Eliminada', life: 3000 });
+        // let _categories = categories.filter(val => val.id !== category.id);
+        // setCategories(_categories);
+        // setDeleteCategoryDialog(false);
+        // setCategory(emptyCategory);
+        // toast.current.show({ severity: 'success', summary: '¡Éxito!', detail: 'Categoria Eliminada', life: 3000 });
+        fetch('api/categories/delete/' + category.idcategory, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(category)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Category Deleted', life: 3000 });
+            }
+            );
     }
 
     const findIndexById = (id) => {
