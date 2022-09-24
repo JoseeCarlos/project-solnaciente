@@ -9,7 +9,7 @@ class CategoryModel():
             connection = get_connection()
             categories = []
             with connection.cursor() as cursor:
-                cursor.execute("SELECT * FROM category")
+                cursor.execute("SELECT idcategory, image, name, description, is_active, created_at, updated_at FROM category")
                 for row in cursor.fetchall():
                     categories.append(Category(row[0],row[1],row[2],row[3],row[4],row[5],row[6]).to_JSON())
                
@@ -40,9 +40,8 @@ class CategoryModel():
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
-                cursor.execute("""INSERT INTO category (image, name, description, updated_at) 
-                VALUES (%s, %s, %s, %s)""", (category.image, category.name, category.description, category.updated_at,))
-                affected_rows = cursor.rowcount
+                query = "INSERT INTO category (image, name, description, updated_at) VALUES (%s, %s, %s, %s)"
+                affected_rows = cursor.execute(query, (category.image, category.name, category.description, category.updated_at))
                 connection.commit()
             connection.close()
             return affected_rows
@@ -54,7 +53,7 @@ class CategoryModel():
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
-                cursor.execute("DELETE FROM category WHERE idcategory = %s", (category.id,))
+                cursor.execute("UPDATE category SET is_active = 0 WHERE idcategory = %s", (category.idcategory,))
                 affected_rows = cursor.rowcount
                 connection.commit()
             connection.close()
@@ -67,7 +66,7 @@ class CategoryModel():
         try:
             connection = get_connection()
             with connection.cursor() as cursor:
-                cursor.execute("UPDATE category SET name = %s, description = %s, image = %s, created = %s, updated = %s, deleted = %s WHERE id = %s", (category.name, category.description, category.image, category.created, category.updated, category.deleted, category.id))
+                cursor.execute("UPDATE category SET name = %s, description = %s, image = %s, updated_at = %s WHERE idcategory = %s", (category.name, category.description, category.image, category.updated_at, category.idcategory))
                 affected_rows = cursor.rowcount
                 connection.commit()
             connection.close()

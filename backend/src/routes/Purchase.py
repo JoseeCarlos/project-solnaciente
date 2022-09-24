@@ -2,6 +2,8 @@ from sre_parse import CATEGORIES
 from flask import Blueprint, jsonify, request
 from models.PurchaseModel import PurchaseModel
 from models.entities.Purchase import Purchase
+from models.entities.PurchaseDetail import PurchaseDetail
+from models.entities.Product import Product
 
 main = Blueprint('purchase_blueprint', __name__)
 
@@ -27,15 +29,13 @@ def get_purchase(id):
 @main.route('/add', methods=['POST'])
 def add_purchase():
     try:
-        date = request.json['date']
-        total = request.json['total']
-        purchase = Purchase(date, total)
-        affected_rows = PurchaseModel.add_purchase(purchase)
-        if affected_rows == 1:
-            return jsonify(purchase.id)
-        else:
-            return jsonify({'error': 'Purchase not added'}), 500
-
+        purchase = Purchase(total_quantity=request.json['total_quantity'], total_price=request.json['total_price'], purchase_date=request.json['purchase_date'],update_at=request.json['updated_at'],idUser=request.json['iduser'],idProvider=request.json['idprovider'])
+        purchaseDetail = PurchaseDetail(quantity=request.json['quantity'], price=request.json['price'], product_id=request.json['idproduct'], purchase_id=request.json['idpurchase'])
+        product = Product(idProduct=request.json['idproduct'], price_in=request.json['price'])
+        affected_rows = PurchaseModel.add_purchase(purchase, purchaseDetail, product)
+        if affected_rows == 0:
+            return jsonify({'error': 'Provider not added'}), 500
+        return jsonify({'message': 'Purchase added'}), 201
     except Exception as ex:
         return jsonify({'error': str(ex)}), 500
 

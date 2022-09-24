@@ -44,25 +44,30 @@ class PurchaseModel():
            
     
         @classmethod
-        def add_purchase(self,purchase, list_products):
+        def add_purchase(self,purchase, purchase_details, product):
             connection = get_connection()
             try:
+                #insert and update
                 with connection.cursor() as cursor:
-                    cursor.execute("""INSERT INTO purchase (total_quantity, total_price, purchase_date, is_active, update_at, idUser) 
-                    VALUES ( %s, %s, %s, %s, %s, %s)""", (purchase.total_quantity, purchase.total_price, purchase.purchase_date, purchase.is_active, purchase.update_at, purchase.idUser))
-                    for product in list_products:
-                        cursor.execute("""INSERT INTO purchasedetail (quantity, price, idProduct, idPurchase) 
-                        VALUES ( %s, %s, %s, %s)""", (product.quantity, product.price, product.idProduct, cursor.lastrowid))
-                        cursor.execute("""UPDATE product SET stock = stock - %s 
-                        WHERE idproduct = %s""", (product.quantity, product.idProduct))
-                    
+                    cursor.execute("""INSERT INTO purchase (total_quantity, total_price,
+                     purchase_date, updated_at, iduser, idprovider) 
+                    VALUES (%s, %s, %s, %s, %s, %s)""", (purchase.total_quantity, purchase.total_price, purchase.purchase_date, purchase.update_at, purchase.idUser, purchase.idProvider))
+                    connection.commit()
+                    id = cursor.lastrowid
+                    cursor.execute("""INSERT INTO purchase_detail 
+                    (quantity, price, idpurchase, idproduct) 
+                    VALUES (%s, %s, %s, %s)""", (purchase_details.quantity, purchase_details.price, id, purchase_details.product_id))
+                    cursor.execute("""UPDATE product SET stock = stock + %s, price_int = %s 
+                    WHERE idproduct = %s""", (purchase_details.quantity,product.price_in, product.idProduct))
                     connection.commit()
                     affected_rows = cursor.rowcount
-                connection.close()
                 return affected_rows
             except Exception as ex:
                 connection.rollback()
                 raise Exception(ex)
+            finally:
+                connection.close()
+
         
         @classmethod
         def delete_purchase(self, purchase):

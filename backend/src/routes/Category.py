@@ -29,23 +29,20 @@ def add_category():
     try:
         category = Category(image=request.json['image'], name=request.json['name'], description=request.json['description'], updated_at=request.json['updated_at'])
         affected_rows = CategoryModel.add_category(category)
-        if affected_rows == 1:
-            return jsonify({'success': 'Category added successfully'}), 201
-        else:
+        if affected_rows == 0:
             return jsonify({'error': 'Category not added'}), 500
-
+        return jsonify({'success': 'Category added successfully'}), 200
     except Exception as ex:
         return jsonify({'error': str(ex)}), 500
 
 @main.route('/delete/<id>', methods=['DELETE'])
 def delete_category(id):
     try:
-        category = Category(id=id)
+        category = Category(idcategory=id)
         affected_rows = CategoryModel.delete_category(category)
-        if affected_rows == 1:
-            return jsonify({'success': 'Category deleted successfully'}), 200
-        else:
-            return jsonify({'error': 'Category not deleted'}), 500  
+        if affected_rows == 0:
+            return jsonify({'error': 'Category not deleted'}), 500
+        return jsonify({'success': 'Category deleted successfully'}), 200
 
     except Exception as ex:
         return jsonify({'error': str(ex)}), 500
@@ -53,12 +50,11 @@ def delete_category(id):
 @main.route('/update/<id>', methods=['PUT'])
 def update_category(id):
     try:
-        category = Category(id=id, image=request.json['image'], name=request.json['name'], description=request.json['description'], updated_at=request.json['updated_at'])
+        category = Category(idcategory=id, image=request.json['image'], name=request.json['name'], description=request.json['description'], updated_at=request.json['updated_at'])
         affected_rows = CategoryModel.update_category(category)
-        if affected_rows == 1:
-            return jsonify({'success': 'Category updated successfully'}), 200
-        else:
+        if affected_rows == 0:
             return jsonify({'error': 'Category not updated'}), 500
+        return jsonify({'success': 'Category updated successfully'}), 200
 
     except Exception as ex:
         return jsonify({'error': str(ex)}), 500

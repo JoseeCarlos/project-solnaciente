@@ -18,7 +18,7 @@ const Crud = () => {
     let emptyProduct = {
         idProduct: null,
         name: '',
-        image: '',
+        image: 'defaul.jpg',
         barcode: '',
         price_in: null,
         price_out: null,
@@ -436,11 +436,11 @@ const Crud = () => {
     const myUploader = (event,name) => {
 
         const val = event.files[0].name;
-        let _product = { ...product };
+        // let _product = { ...product };
         console.log(val+" "+name);
-        _product[`${name}`] = val;
+        // _product[`${name}`] = val;
 
-        setProduct(_product);
+        // setProduct(_product);
 
     }
 
@@ -475,7 +475,7 @@ const Crud = () => {
                     </DataTable>
 
                     <Dialog visible={productDialog} style={{ width: '450px' }} header="Detalles del Producto" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
-                        {product.image && <img src={`assets/demo/images/product/${product.image}`} alt={product.image} width="150" className="mt-0 mx-auto mb-5 block shadow-2" />}
+                        { product.image=='defaul.jpg' ? <img src={`assets/demo/images/product/${product.image}`} alt={product.image} width="150" className="mt-0 mx-auto mb-5 block shadow-2" /> : <img src={`assets/demo/images/product/${product.image}`} alt={product.image} width="150" className="mt-0 mx-auto mb-5 block shadow-2" /> }
                         <div className="field">
                             <label htmlFor="name">Nombre</label>
                             <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
@@ -483,7 +483,7 @@ const Crud = () => {
                         </div>
                         <div className="field">
                             <label htmlFor="image">Imagen</label>
-                            <FileUpload name="demo[]" url="./upload" customUpload uploadHandler={(e)=> myUploader(e,'image')} />
+                            <FileUpload name="demo[]" url="./assets/" customUpload uploadHandler={(e)=> myUploader(e,'image')} />
                             {submitted && !product.image && <small className="p-invalid">Image is required.</small>}
                         </div>
                         <div className="field">
