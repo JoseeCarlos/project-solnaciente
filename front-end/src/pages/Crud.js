@@ -221,6 +221,7 @@ const Crud = () => {
 
     const onCategoryChange = (e) => {
         let _product = { ...product };
+        console.log(e.value);
         _product['category_id'] = e.value;
         console.log(_product);
         setProduct(_product);
@@ -313,8 +314,8 @@ const Crud = () => {
     const imagepBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Image</span>
-                {rowData.image}
+                <span className="p-column-title">Imagen</span>
+                <img src={`assets/demo/images/product/${rowData.image}`} alt={rowData.image} className="shadow-2" width="100" />
             </>
         );
     }
@@ -538,8 +539,8 @@ const Crud = () => {
                             { categories.map((item)=>(
                                 
                                 <div className="field-radiobutton col-6">
-                                    <RadioButton inputId={item.id} name="category" value={item.id} onChange={onCategoryChange} checked={product.category_id === item.id} />
-                                    <label htmlFor={item.id}>{item.name}</label>
+                                    <RadioButton inputId={item.idcategory} name="category" value={item.idcategory} onChange={onCategoryChange} checked={product.category_id === item.idcategory} />
+                                    <label htmlFor={item.idcategory}>{item.name}</label>
                                 </div>
                             )) }
                             </div>
