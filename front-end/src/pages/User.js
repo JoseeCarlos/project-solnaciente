@@ -240,7 +240,7 @@ const Crud = () => {
         return (
             <>
                 <span className="p-column-title">Nombre Completo</span>
-                {rowData.name} {rowData.last_name} {rowData.second_last_name}
+                {rowData.name +' '+  rowData.first_name +' '+ rowData.second_name} 
             </>
         );
     }
@@ -285,7 +285,7 @@ const Crud = () => {
         return (
             <>
                 <span className="p-column-title">Estado</span>
-                <span className={`provider-badge status-lowstock`}>{ rowData.is_active === 0 ? 'Inactivo' : 'Activo' }</span>
+                <span className={`provider-badge status-${ rowData.is_active === 0 ?  'outofstock' : 'instock' }`}>{ rowData.is_active === 0 ? 'Inactivo' : 'Activo' }</span>
             </>
         )
     }
@@ -311,7 +311,7 @@ const Crud = () => {
         return (
             <div className="actions">
                 <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editUser(rowData)} />
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteUser(rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-danger mt-2" onClick={() => confirmDeleteUser(rowData)} />
             </div>
         );
     }
