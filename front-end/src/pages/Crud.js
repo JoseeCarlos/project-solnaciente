@@ -392,7 +392,7 @@ const Crud = () => {
         return (
             <>
                 <span className="p-column-title">Estado</span>
-                <span className={`product-badge status-${rowData.inventoryStatus.toLowerCase()}`}>{rowData.inventoryStatus}</span>
+                <span className={`provider-badge status-${ rowData.is_active === 0 ?  'outofstock' : 'instock' }`}>{ rowData.is_active === 0 ? 'Inactivo' : 'Activo' }</span>
             </>
         )
     }
@@ -401,7 +401,7 @@ const Crud = () => {
         return (
             <div className="actions">
                 <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editProduct(rowData)} />
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-warning mt-2" onClick={() => confirmDeleteProduct(rowData)} />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-danger mt-2" onClick={() => confirmDeleteProduct(rowData)} />
             </div>
         );
     }
@@ -464,8 +464,9 @@ const Crud = () => {
                         <Column field="image" header="Image" sortable body={imagepBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="Presentation" header="Presentation" sortable body={priceoutBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="Category" header="Category" sortable body={categorysBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="PriceInt" header="PriceInt" sortable body={priceinBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-                        <Column field="PriceOut" header="PriceOut" sortable body={presentationBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="is_active" header="Estado" body={statusBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        {/* <Column field="PriceInt" header="PriceInt" sortable body={priceinBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+                        <Column field="PriceOut" header="PriceOut" sortable body={presentationBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column> */}
 
                         {/* <Column header="Image" body={imageBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
                         <Column field="price" header="Price" body={priceBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '8rem' }}></Column>
