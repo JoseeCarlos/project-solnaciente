@@ -1,1 +1,21 @@
+.logo{
+    display: grid;
+    grid-template-columns: 3rem auto;
+}
 
+.logoDes .tit {
+    border-bottom: 2px solid white;
+}
+
+.logoDes h4{
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+    color: white;
+}
+.p-link i{
+    color: white !important;
+}
+.p-link:hover i {
+    color: black !important;
+}

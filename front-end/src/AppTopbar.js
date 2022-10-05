@@ -5,9 +5,15 @@ import classNames from 'classnames';
 export const AppTopbar = (props) => {
 
     return (
-        <div className="layout-topbar" style={{backgroundColor: '#fa2020'}}>
+        <div className="layout-topbar" style={{backgroundColor: '#1ABC9C'}}>
             <Link to="/" className="layout-topbar-logo">
-                <img src={props.layoutColorMode === 'light' ? 'assets/layout/images/logo.jpg' : 'assets/layout/images/logo.jpg'} height='200px' width='200px' alt="logo"/>
+                <div class="logo">
+                    <img src={props.layoutColorMode === 'light' ? 'assets/layout/images/nf1.png' : 'assets/layout/images/logo.jpg'}  alt="logo"/>
+                    <div class="logoDes">
+                        <h4 class='tit'>NANO'S FERRETERÍA</h4>
+                        <h4>PRODUCTOS DE CALIDAD</h4>
+                    </div>
+                </div>
             </Link>
 
             <button type="button" className="p-link  layout-menu-button layout-topbar-button" onClick={props.onToggleMenuClick}>
