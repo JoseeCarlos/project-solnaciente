@@ -306,7 +306,7 @@ const Crud = () => {
     const barcodeBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Barcode</span>
+                <span className="p-column-title">Cod Barra</span>
                 {rowData.barcode}
             </>
         );
@@ -322,7 +322,7 @@ const Crud = () => {
     const priceinBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Price in</span>
+                <span className="p-column-title">Precio de entrada</span>
                 {rowData.price_in}
             </>
         );
@@ -330,7 +330,7 @@ const Crud = () => {
     const priceoutBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Price Out</span>
+                <span className="p-column-title">Precio de salida</span>
                 {rowData.price_out}
             </>
         );
@@ -338,7 +338,7 @@ const Crud = () => {
     const presentationBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Price Out</span>
+                <span className="p-column-title">Precio de salida</span>
                 {rowData.price_out}
             </>
         );
@@ -346,7 +346,7 @@ const Crud = () => {
     const categoryBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Category</span>
+                <span className="p-column-title">Categoría</span>
                 {rowData.category}
             </>
         );
@@ -364,7 +364,7 @@ const Crud = () => {
     const priceBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Pricio</span>
+                <span className="p-column-title">Precio</span>
                 {formatCurrency(rowData.price)}
             </>
         );
@@ -418,7 +418,7 @@ const Crud = () => {
 
     const productDialogFooter = (
         <>
-            <Button label="CancelaR" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
+            <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={hideDialog} />
             <Button label="Guardar" icon="pi pi-check" className="p-button-text" onClick={saveProduct} />
         </>
     );
@@ -590,14 +590,14 @@ const Crud = () => {
                     <Dialog visible={deleteProductDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {product && <span>Are you sure you want to delete <b>{product.name}</b>?</span>}
+                            {product && <span>Estas seguro de eliminar <b>{product.name}</b>?</span>}
                         </div>
                     </Dialog>
 
                     <Dialog visible={deleteProductsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                            {product && <span>Are you sure you want to delete the selected products?</span>}
+                            {product && <span>Esta seguro de eliminar este producto?</span>}
                         </div>
                     </Dialog>
                 </div>
