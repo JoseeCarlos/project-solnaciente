@@ -9,6 +9,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { UserService } from '../service/UserService';
 import { RadioButton } from 'primereact/radiobutton';
+import { Dropdown } from 'primereact/dropdown';
 // import { Select } from 'react-select'
 
 const Crud = () => {
@@ -28,6 +29,7 @@ const Crud = () => {
     };
 
     const [users, setUsers] = useState(null);
+    const [usersFiltered, setUsersFiltered] = useState(null);
     const [userDialog, setUserDialog] = useState(false);
     const [deleteUserDialog, setDeleteUserDialog] = useState(false);
     const [deleteUsersDialog, setDeleteUsersDialog] = useState(false);
@@ -38,6 +40,12 @@ const Crud = () => {
     const toast = useRef(null);
     const dt = useRef(null);
     const [roles, setRoles] = useState([]);
+    const [selectedActive, setSelectedActive] = useState(null);
+    const data = [
+        {name: 'Empleados Activos', value : 'active'},
+        {name: 'Empleados Inactivos', value : 'inactive'},
+        {name: 'Todos los Empleados', value : 'all'}
+    ];
 
     useEffect(() => {
         // const userService = new UserService();
@@ -46,7 +54,9 @@ const Crud = () => {
             .then(res => res.json())
             .then(data => {
                 console.log(data);
-                setUsers(data)})
+                setUsers(data)
+                setUsersFiltered(data)
+            })
 
         
         fetch('/api/roles/')
@@ -56,6 +66,17 @@ const Crud = () => {
                 setRoles(data)}
             )
     }, []);
+
+    const onActiveChange = (e) => {
+        setSelectedActive(e.value);
+        setUsers(usersFiltered);
+        if(e.value === 'active'){
+            setUsers(usersFiltered.filter((user) => user.is_active === 1));
+        }
+        if(e.value === 'inactive'){
+            setUsers(usersFiltered.filter((user) => user.is_active === 0));
+        }
+    };
 
     const formatCurrency = (value) => {
         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -321,6 +342,7 @@ const Crud = () => {
             <h5 className="m-0">Busqueda de Usuarios</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
+                <Dropdown value={selectedActive} options={data} onChange={onActiveChange} optionLabel="name" placeholder="Tipo de Usuarios"/>
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
             </span>
         </div>

@@ -12,6 +12,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { ProviderService } from '../service/ProviderService';
 import { ConnectedOverlayScrollHandler } from 'primereact/utils';
+import { Dropdown } from 'primereact/dropdown';
 
 const Crud = () => {
     let emptyProvider = {
@@ -26,6 +27,7 @@ const Crud = () => {
     };
 
     const [providers, setProviders] = useState(null);
+    const [providersFiltered, setProvidersFiltered] = useState(null);
     const [providerDialog, setProviderDialog] = useState(false);
     const [deleteProviderDialog, setDeleteProviderDialog] = useState(false);
     const [deleteProvidersDialog, setDeleteProvidersDialog] = useState(false);
@@ -35,15 +37,37 @@ const Crud = () => {
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
+    const [selectedActive, setSelectedActive] = useState(null);
+    const data = [
+        {name: 'Proveedores Activos', value : 'active'},
+        {name: 'Proveedores Inactivos', value : 'inactive'},
+        {name: 'Todos los Proveedores', value : 'all'}
+    ];
 
     useEffect(() => {
         // const providerService = new ProviderService();
         // providerService.getProviders().then(data => setProviders(data));
         fetch('/api/providers/').then(res => res.json()).then(data => {
             setProviders(data)
+            setProvidersFiltered(data)
             console.log(data.length)
         });
     }, []);
+
+    const onActiveChange = (e) => {
+        setSelectedActive(e.value);
+        setProviders(providersFiltered);
+        if(e.value === 'active'){
+            setProviders(providers.filter((val) => {
+                return val.is_active === 1;
+            }))
+        }
+        if(e.value === 'inactive'){
+            setProviders(providers.filter((val) => {
+                return val.is_active === 0;
+            }))
+        }
+    };
 
     const formatCurrency = (value) => {
         return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
@@ -303,6 +327,7 @@ const Crud = () => {
             <h5 className="m-0">Busqueda de Proveedores</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
+                <Dropdown value={selectedActive} options={data} onChange={onActiveChange} optionLabel="name" placeholder="Tipo de Usuarios"/>
                 <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
             </span>
         </div>

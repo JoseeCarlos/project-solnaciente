@@ -37,6 +37,7 @@ import Provider from './pages/Provider';
 import User from './pages/User';
 import Sale from './pages/Sale';
 import Purchase from './pages/Purchase';
+import Brand from './pages/Brand';
 
 import PrimeReact from 'primereact/api';
 import { Tooltip } from 'primereact/tooltip';
@@ -180,6 +181,7 @@ const App = () => {
             items: [
                 { label: 'Productos', icon: ' pi pi-fw pi-user-edit ' , to: '/crud' },
                 { label: 'Categorias', icon: 'pi pi-fw pi-user-edit', to: '/category' },
+                { label: 'Marcas', icon: 'pi pi-fw pi-user-edit', to: '/brand' },
                 
               
             ]
@@ -274,6 +276,7 @@ const App = () => {
                     <Route path="/user" component={User} />
                     <Route path="/sale" component={Sale} />
                     <Route path="/purchase" component={Purchase} />
+                    <Route path="/brand" component={Brand} />
                 </div>
 
                 <AppFooter layoutColorMode={layoutColorMode} />

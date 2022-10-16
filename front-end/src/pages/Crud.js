@@ -13,6 +13,10 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { ProductService } from '../service/ProductService';
+import { Dropdown } from 'primereact/dropdown';
+import  PDFViewer , { PDFDownloadLink  } from '@react-pdf/renderer';
+import PDFFile from  '../reports/Products';
+ 
 
 const Crud = () => {
     let emptyProduct = {
@@ -34,8 +38,10 @@ const Crud = () => {
         id_brand: null,
 
     };
+   
 
     const [products, setProducts] = useState(null);
+    const [productsFiltered, setProductsFiltered] = useState(null);
     const [productDialog, setProductDialog] = useState(false);
     const [deleteProductDialog, setDeleteProductDialog] = useState(false);
     const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
@@ -48,16 +54,15 @@ const Crud = () => {
     const dt = useRef(null);
     const [providers, setProviders] = useState([]);
     const [brands, setBrands] = useState([]);
+    const [activeProduct, setActiveProduct] = useState(true);
+  
 
     useEffect(() => {
-        // const productService = new ProductService();
-        // productService.getProducts().then(data => setProducts(data));
-        
-        
-        
+
         console.log(categories.length);
         fetch("/api/products/").then((res)=>res.json().then((data)=> {
             setProducts(data)
+            setProductsFiltered(data)
             data.map((item)=>console.log(item.idProduct))
           }
           ));
@@ -79,7 +84,6 @@ const Crud = () => {
             console.log(brands.length);
           }
             ));
-        
     }, []);
 
     const formatCurrency = (value) => {
@@ -203,6 +207,14 @@ const Crud = () => {
         return id;
     }
 
+    const renderPdf = () => {
+        console.log("renderPdf");
+    //    <PDFDownloadLink document={<MyDocument />} fileName="somename.pdf">
+    //         {({ blob, url, loading, error }) => (loading ? 'Loading document...' : 'Download now!')}
+    //     </PDFDownloadLink>
+        
+    }
+
     const exportCSV = () => {
         dt.current.exportCSV();
     }
@@ -277,11 +289,18 @@ const Crud = () => {
         )
     }
 
+    const [selectedReport, setSelectedReport] = useState(null);
+  
+     const dataReport = [
+        {name: 'Productos Activos', value : 'active'},
+        {name: 'Productos Inactivos', value : 'inactive'},
+        {name: 'Productos Agotados', value : 'exhausted'}
+    ];
+
     const rightToolbarTemplate = () => {
         return (
             <React.Fragment>
-                <FileUpload mode="basic" accept="image/*" maxFileSize={1000000} label="Cargar Imagen" chooseLabel="Cargar Imagen" className="mr-2 inline-block" />
-                
+                <Dropdown value={selectedReport} options={dataReport} onChange={onReportChange} optionLabel="name" placeholder="Descargar Reporte"/>
             </React.Fragment>
         )
     }
@@ -343,6 +362,7 @@ const Crud = () => {
             </>
         );
     }
+
     const categoryBodyTemplate = (rowData) => {
         return (
             <>
@@ -364,7 +384,7 @@ const Crud = () => {
     const priceBodyTemplate = (rowData) => {
         return (
             <>
-                <span className="p-column-title">Pricio</span>
+                <span className="p-column-title">Precio</span>
                 {formatCurrency(rowData.price)}
             </>
         );
@@ -405,13 +425,49 @@ const Crud = () => {
             </div>
         );
     }
+   
+    const [selectedActive, setSelectedActive] = useState(null);
+  
+     const data = [
+        {name: 'Productos Activos', value : 'active'},
+        {name: 'Productos Inactivos', value : 'inactive'},
+        {name: 'Todos los Productos', value : 'all'}
+    ];
 
+    const onReportChange = (e) => {
+        setSelectedReport(e.value);
+        console.log(e.value);
+        if (e.value === 'active') {
+            let report = [];
+            fetch('/api/report/product')
+            .then(response => response.json())
+            .then(data => {
+                report = data;
+                console.log(report);
+                // setReport(report);
+            }
+            );
+        }
+    };
+    
+    const onActiveChange = (e) => {
+        setSelectedActive(e.value);
+        setProducts(productsFiltered);
+        if(e.value === 'active'){
+            setProducts(products.filter((product) => product.is_active === 1));
+            console.log(products);  
+        }
+        if(e.value === 'inactive'){
+            setProducts(products.filter((product) => product.is_active === 0));
+        }
+    };
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
             <h5 className="m-0">Busqueda de Productos</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
-                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
+                <Dropdown value={selectedActive} options={data} onChange={onActiveChange} optionLabel="name" placeholder="Tipo de producto"/>
+                <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." /> 
             </span>
         </div>
     );
